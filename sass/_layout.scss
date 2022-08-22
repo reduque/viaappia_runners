@@ -1,0 +1,123 @@
+header{
+    border-bottom: 1px solid $gris_oscuro;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    img{
+        width: 6rem;
+    }
+    ul{
+        @include ul_limpio();
+        display: flex;
+        a{
+            margin-right: 1rem;
+        }
+    }
+}
+body{
+    box-sizing: border-box;
+    width: 960px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+main{
+    padding: 1rem 0;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    th, td{
+        border: 1px solid $gris_medio;
+        padding: 0.5rem 0.8rem;
+        vertical-align: top;
+    }
+    td.cant{
+        width: 5rem;
+    }
+    ul{
+        padding-left: 1rem;
+    }
+    tr.cambia b{
+        color: red;
+    }
+}
+
+.fichas{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    article{
+        box-sizing: border-box;
+        width: 31.33%;
+        margin: 0.5rem 1%;
+        border-radius: 1rem;
+        background: $gris;
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        &.r{
+            border: 2px solid red;
+        }
+        &.v{
+            border: 2px solid $verde;
+        }
+        &.a{
+            border: 2px solid yellow;
+        }
+        &.b{
+            border: 2px solid blue;
+        }
+        &.n{
+            border: 2px solid black;
+        }
+        & > div{
+            width: 100%;
+        }
+        a{
+            border-radius: 0.5rem;
+            display: inline-block;
+            background: $color_vino;
+            padding: 0.3rem 1rem;
+            color: #fff;
+            margin-top: 1rem;
+            font-family: $antonio;
+        }
+        @media only screen and (max-width:641px) {
+            width: 48%;
+        }
+        @media only screen and (max-width:441px) {
+            width: 98%;
+        }
+    }
+    p{
+        width: 100%;
+        border-radius: 1rem;
+        background: $gris;
+        padding: 1rem;
+        border: 2px solid $color_vino;
+        text-align: center;
+
+    }
+}
+
+.alert{
+    position: fixed;
+    top: 1rem;
+    left: 0;
+    width: 100%;
+    display: none;
+    div{
+        box-sizing: border-box;
+        margin: 0 auto;
+        width: 640px;
+        max-width: 90%;
+        padding: 0.5rem 1rem;
+        text-align: center;
+        background: $gris_oscuro;
+        color: #fff;
+        border-radius: 0.5rem;
+    }
+}
