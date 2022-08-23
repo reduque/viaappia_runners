@@ -25,7 +25,7 @@ main{
     padding: 1rem 0;
 }
 
-table{
+table.pedido{
     width: 100%;
     border-collapse: collapse;
     th, td{
@@ -103,6 +103,17 @@ table{
     }
 }
 
+.boton_wa{
+    background: #0DBF41;
+    border-radius: 0.5rem;
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    color: #fff;
+    margin-top: 1rem;
+    font-family: $antonio;
+    font-size: 1rem;
+    outline: none;
+}
 .alert{
     position: fixed;
     top: 1rem;

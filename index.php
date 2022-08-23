@@ -180,6 +180,23 @@ Route::add('/ver_despacho',function(){
     include('pages/layout.php');
 },'get','login');
 
+Route::add('/actualizar_delivery_ref',function(){
+    $pedido_id=rqq('pedido_id');
+    $data=[
+        'delivery_ref' => rqq(('delivery_ref'))
+    ];
+    $sql=crea_update('orders', $data, " where id = '" . $pedido_id . "'");
+    $GLOBALS['mysqli']->query($sql);
+
+    header('Location: /ver_despacho?id=' . $pedido_id);
+    exit;
+},'post');
+
+Route::add('/ver_despacho_imp',function(){
+    $id=rqq('id');
+    include('pages/ver_despacho_imp.php');
+},'get');
+
 Route::add('/despachar',function(){
     $id=rqq('id');
     $idc=codifica($id);

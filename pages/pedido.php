@@ -11,7 +11,7 @@ if($pedido){
         <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?>
     </p>
     <br>
-    <table>
+    <table class="pedido">
     <?php
     $sql="Select * from order_products where order_id=" . $id;
     $items=leen($sql);
