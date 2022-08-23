@@ -100,33 +100,3 @@ if($r->num_rows>0){
 }
 if(!$haypedidot){ ?><p>No hay pedidos pendientes</p><?php }
 
-
-exit;
-// -----------------------------------
-
-foreach($pedidos as $pedido){
-    ?>
-    <article>
-        <div><?php echo date('d/m/Y H:n',strtotime($pedido['created_at'])); ?></div>
-        <a href="pedido?id=<?php echo $pedido['id']; ?>">Tomar</a>
-    </article>
-    <?php
-}
-
-exit();
-$sql="Select * from orders";
-
-$pedidos = $GLOBALS['mysqli']->query($sql);
-
-
-$pedidos->fetch_all(MYSQLI_ASSOC);
-foreach($pedidos as $pedido){
-    ?>
-    <article>
-        <div><?php echo date('d/m/Y H:n',strtotime($pedido['created_at'])); ?></div>
-        <a href="pedido?id=<?php echo $pedido['id']; ?>">Tomar</a>
-    </article>
-    <?php
-}
-$pedidos->close();
-?>
