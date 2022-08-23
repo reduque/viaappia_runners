@@ -163,6 +163,7 @@ function enviar_push($url, $to, $titulo, $cuerpo, $mensaje){
 			'body'  => $cuerpo,
 			'title' => $titulo,
 			'icon'  => ("./android-chrome-192x192.png"),
+			"sound" => "default"
 			//'click_action' => "https://viaappia_runners.test/enero"
 		);
 	$fields = array

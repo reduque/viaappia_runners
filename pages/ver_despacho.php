@@ -68,7 +68,7 @@ if($pedido){
     <p align="center">
         <form method="POST" action="actualizar_delivery_ref">
             <input type="hidden" name="pedido_id" value="<?php echo $pedido['id']; ?>">
-            <label>Refelencia de la empresa de delivery</label>
+            <label><b>Refelencia de la empresa de delivery</b></label>
             <table width="100%">
                 <tr>
                     <td><input name="delivery_ref" type="text" maxlength="50" value="<?php echo $pedido['delivery_ref']; ?>" require></td>
@@ -80,7 +80,7 @@ if($pedido){
     <p>
         <table width="100%">
             <tr>
-                <td><a href="javascript:" onclick="printDiv()">Imprimir pedido</a></td>
+                <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <?php if($pedido['tipo_entrega']=='Delivery'){ ?>
                 <td align="right"><a href="https://wa.me/584149067303?text=<?php
 echo urlencode('*INFORMACIÓN DE ENTREGA*
