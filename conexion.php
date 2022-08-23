@@ -5,17 +5,21 @@ date_default_timezone_set('America/Caracas');
 
 $ruta='https://viaappia.test/img/';
 
+/*
+Variables de entorno
+composer require vlucas/phpdotenv
+*/
+
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+
 $servername='localhost';
 
-if($_SERVER['HTTP_HOST'] == 'viaappia_runners.test'){
-	$username='root';
-	$password='admin';
-	$database='viaappia';
-}else{
-	$username='viaappia_user';
-	$password=';[FXW0t?3nA(';
-	$database='viaappia_tienda';
-}
+$username=$_ENV["DB_USERNAME"];
+$password=$_ENV["DB_PASSWORD"];
+$database=$_ENV["DB_DATABASE"];
 
 
 $mysqli = new mysqli($servername, $username, $password, $database);
@@ -152,7 +156,7 @@ function estatus_array(){
 
 
 function enviar_push($url, $to, $titulo, $cuerpo, $mensaje){
-	$token = "AAAAlMl6zPQ:APA91bEKrwj5vIJfUMdSoFLkFa3axHXwKMPZeMoWA9JiZKg6bY4uGqZ47hG68XKvOOBQ-cJ4PcwSMSw5Z70uY4_X0izFMgSouHToXe780xIHSfUfOWyqDAahhdW7No7mRUB2j2as3nzh";
+	$token = $_ENV["FIREBASE_API_KEY"];
 	//$to = $runners;
 	$msg = array
 		(
