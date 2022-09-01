@@ -57,7 +57,9 @@ if($pedido){
                 if($contornos<>''){
                     echo '<li>' . 'Contornos: ' . $contornos . '</li>';
                 }
-
+                if( $item['horneado']){
+                    echo '<li>' . 'Horneado' . '</li>';
+                }
                 ?>
                 </ul>
             </td>
