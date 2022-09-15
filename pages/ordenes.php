@@ -34,7 +34,7 @@ if($r->num_rows>0){
     }
 }
 
-$sql="Select id from orders where estatus=2 and runner_id=" . $runner_id;
+$sql="Select id from orders where estatus in (2,3,4,5) and runner_id=" . $runner_id;
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
@@ -43,29 +43,14 @@ if($r->num_rows>0){
         ?>
         <article class="b">
             <div>
-                <div>Esperando revisión del cliente (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?>)</div>
-            </div>
-        </article>
-    <?php
-    }
-}
-$sql="Select id from orders where estatus=3 and runner_id=" . $runner_id;
-$r=leen($sql);
-if($r->num_rows>0){
-    $haypedidot=true;
-    foreach($r as $pedido){
-        $id=strval($pedido['id']);
-        ?>
-        <article class="b">
-            <div>
-                <div>Esperando pago del cliente (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?>)</div>
+                <div>Esperando respuesta del cliente / administrador (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?>)</div>
             </div>
         </article>
     <?php
     }
 }
 
-$sql="Select id from orders where estatus=4 and runner_id=" . $runner_id;
+$sql="Select id from orders where estatus=6 and runner_id=" . $runner_id;
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
@@ -82,7 +67,7 @@ if($r->num_rows>0){
     }
 }
 
-$sql="Select a.id, b.name from orders a inner join runners b on a.runner_id=b.id where (estatus=1 or estatus=4) and runner_id<>" . decodifica($_SESSION['api_id']);
+$sql="Select a.id, b.name from orders a inner join runners b on a.runner_id=b.id where (estatus=1 or estatus=6) and runner_id<>" . decodifica($_SESSION['api_id']);
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;

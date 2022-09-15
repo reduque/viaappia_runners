@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion from orders where id=" . $id;
+$sql="Select id, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -83,7 +83,15 @@ if($pedido){
         <table width="100%">
             <tr>
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
-                <?php if($pedido['tipo_entrega']=='Delivery'){ ?>
+                <?php if($pedido['tipo_entrega']=='Delivery'){ 
+                if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
+                    $m_efectivo='Monto en efectivo: $' . $pedido['monto_efectivo'] . '
+Seriales billetes:
+' . $pedido['seriales_billetes'];
+                }else{
+                    $m_efectivo='No recibe efectivo.';
+                }
+                ?>
                 <td align="right"><a href="https://wa.me/584149067303?text=<?php
 echo urlencode('*INFORMACIÓN DE ENTREGA*
 Referencia: ' . str_pad($id , 5, "0", STR_PAD_LEFT) . '
@@ -92,6 +100,7 @@ C.I: ' . $pedido['ci'] . '
 Número de teléfono: ' . $pedido['telefono'] . '
 Dirección de entrega: ' . $pedido['direccion'] . '
 Municipio: ' . $pedido['municipio'] . '
+' . $m_efectivo . ' 
 
 https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa" target="_blank">Enviar WhatsApp al delivery</a></td>
                 <?php } ?>

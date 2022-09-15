@@ -69,7 +69,7 @@ Route::add('/ordenes',function(){
 },'get',);
 
 Route::add('/tomar_pedido',function(){
-    $sql="Select id from orders where estatus=0 order by created_at limit 1";
+    $sql="Select id, user_id from orders where estatus=0 order by created_at limit 1";
     $r=lee1($sql);
     if($r){
         $runner_id=decodifica($_SESSION['api_id']);
@@ -79,7 +79,10 @@ Route::add('/tomar_pedido',function(){
             'estatus' => 1
         ];
         $sql=crea_update('orders', $data, " where id = '" . $r['id'] . "'");
-        $GLOBALS['mysqli']->query($sql);    
+        $GLOBALS['mysqli']->query($sql);
+
+        $sql=crea_update('users', ['order_estatus' => 1, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $r['user_id'] . "'");
+        $GLOBALS['mysqli']->query($sql);
 
         header('Location: /pedido?id=' . $r['id']);
         exit;
@@ -88,18 +91,21 @@ Route::add('/tomar_pedido',function(){
 },'get','login');
 
 Route::add('/tomar_yo',function(){
-    $sql="Select id from orders where (estatus=1 or estatus=4) and id=" . rqq('id');
+    $sql="Select id, user_id from orders where (estatus=1 or estatus=6) and id=" . rqq('id');
     $r=lee1($sql);
     if($r){
         $runner_id=decodifica($_SESSION['api_id']);
         $data=[
             'runner_id' => $runner_id,
             'fecha_runner' => date('Y-m-d H:i:s'),
-            'estatus' => 1
+            //'estatus' => 1
         ];
         $sql=crea_update('orders', $data, " where id = '" . $r['id'] . "'");
         $GLOBALS['mysqli']->query($sql);    
-
+        /*
+        $sql=crea_update('users', ['order_estatus' => 1, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $r['user_id'] . "'");
+        $GLOBALS['mysqli']->query($sql);
+        */
         header('Location: /pedido?id=' . $r['id']);
         exit;
     }
@@ -140,7 +146,7 @@ Route::add('/procesar',function(){
             $GLOBALS['mysqli']->query($sql);
         }
     }
-    $sql="select device_token from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
+    $sql="select device_token, a.user_id from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
     $usuario=lee1o($sql);
     if($cambia){
         $data=[
@@ -148,6 +154,9 @@ Route::add('/procesar',function(){
             'fecha_confirmacion' => date('Y-m-d H:i:s'),
         ];
         $sql=crea_update('orders', $data, " where id = " . $id);
+        $GLOBALS['mysqli']->query($sql);
+
+        $sql=crea_update('users', ['order_estatus' => 2, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
         $GLOBALS['mysqli']->query($sql);
 
         if($usuario->device_token){
@@ -160,6 +169,10 @@ Route::add('/procesar',function(){
         ];
         $sql=crea_update('orders', $data, " where id = " . $id);
         $GLOBALS['mysqli']->query($sql);
+        
+        $sql=crea_update('users', ['order_estatus' => 3, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
+        $GLOBALS['mysqli']->query($sql);
+
         if($usuario->device_token){
             enviar_push('/checkout/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
         }
@@ -201,14 +214,17 @@ Route::add('/despachar',function(){
     $id=rqq('id');
     $idc=codifica($id);
     
-    $sql="select device_token from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
+    $sql="select device_token, a.user_id from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
     $usuario=lee1o($sql);
 
     $data=[
-        'estatus' => 5,
+        'estatus' => 7,
         'fecha_despacho' => date('Y-m-d H:i:s'),
     ];
     $sql=crea_update('orders', $data, " where id = " . $id);
+    $GLOBALS['mysqli']->query($sql);
+
+    $sql=crea_update('users', ['order_estatus' => 7, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
     $GLOBALS['mysqli']->query($sql);
 
     if($usuario->device_token){

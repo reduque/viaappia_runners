@@ -140,16 +140,17 @@ function crea_update($table,$datos,$where){
 	return "UPDATE "  . $table . " SET " . implode(',',$campos) . " " . $where;
 }
 
-
 function estatus_array(){
 	return [
 		0 => 'Sin Atender',
 		1 => 'En Proceso',
 		2 => 'En Revisión', // no hay todos los productos
 		3 => 'Atendido',
-		4 => 'Pagado',
-		5 => 'En Despacho',
-		6 => 'Entredado',
+		4 => 'Editando',
+		5 => 'Esperando aprobación',
+		6 => 'Pagado',
+		7 => 'En Despacho',
+		8 => 'Entregado',
 		10 => 'Eliminado'
 	];
 }
