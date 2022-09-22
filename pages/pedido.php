@@ -16,13 +16,15 @@ if($pedido){
     $sql="Select * from order_products where order_id=" . $id;
     $items=leen($sql);
     foreach($items as $item){
+        /*
         $sql="select * from products where id=" . $item['product_id'];
         $producto=lee1o($sql);
+        */
         $cantidad=($item['cantidad2']) ?: $item['cantidad'];
         ?>
         <tr data-id="<?php echo $item['id']; ?>" data-cantidad="<?php echo $item['cantidad']; ?>" <?php if($cantidad <> $item['cantidad']){echo 'class="cambia"';} ?>>
             <td>
-                <b><?php echo $producto->nombre; ?></b>
+                <b><?php echo $item['alias']; ?></b>
                 <ul>
                 <?php
                 if( $item['variante'] <> ''){
@@ -36,16 +38,12 @@ if($pedido){
                 }
                 $u='';
                 $contornos='';
-                if( $item['sidedish1'] <> ''){
-                    $sql="select * from sidedishes where id=" . $item['sidedish1'];
-                    $acompanante=lee1o($sql);
-                    $contornos .= $u . $acompanante->nombre;
+                if( $item['sidedish_alias1'] <> ''){
+                    $contornos .= $u . $item['sidedish_alias1'];
                     $u=', ';
                 }
-                if( $item['sidedish2'] <> ''){
-                    $sql="select * from sidedishes where id=" . $item['sidedish2'];
-                    $acompanante=lee1o($sql);
-                    $contornos .= $u . $acompanante->nombre;
+                if( $item['sidedish_alias2'] <> ''){
+                    $contornos .= $u . $item['sidedish_alias2'];
                     $u=', ';
                 }
                 if($contornos<>''){
