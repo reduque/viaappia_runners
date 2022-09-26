@@ -43,10 +43,6 @@
         <br>
             <table class="pedido">
             <?php
-            /*
-            $sql="Select * from order_products where order_id=" . $id;
-            $items=leen($sql);
-            */
             foreach($items as $item){
                 $sql="select * from products where id=" . $item['product_id'];
                 $producto=lee1o($sql);
