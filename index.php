@@ -213,18 +213,18 @@ Route::add('/ver_despacho_imp',function(){
 Route::add('/despachar',function(){
     $id=rqq('id');
     $idc=codifica($id);
-    
-    $sql="select device_token, a.user_id from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
-    $usuario=lee1o($sql);
 
+    $sql="select a.tipo_entrega, device_token, a.user_id from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
+    $usuario=lee1o($sql);
+    $estatus = ($usuario->tipo_entrega == 'Delivery') ? 7 : 8;
     $data=[
-        'estatus' => 7,
+        'estatus' => $estatus,
         'fecha_despacho' => date('Y-m-d H:i:s'),
     ];
     $sql=crea_update('orders', $data, " where id = " . $id);
     $GLOBALS['mysqli']->query($sql);
 
-    $sql=crea_update('users', ['order_estatus' => 7, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
+    $sql=crea_update('users', ['order_estatus' => $estatus, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
     $GLOBALS['mysqli']->query($sql);
 
     if($usuario->device_token){

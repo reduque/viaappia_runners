@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes from orders where id=" . $id;
+$sql="Select id, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -13,6 +13,9 @@ if($pedido){
         <?php
         if($pedido['delivery_ref']<>''){
             ?><br><b>Refelencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
+        }
+        if($pedido['tipo_entrega']=='Pick up'){ 
+            echo '<br><b>Hora estimado de retiro:</b> ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
         }
         ?>
     </p>
@@ -65,6 +68,7 @@ if($pedido){
         </tr>
     <?php } ?>
     </table>
+    <?php if($pedido['tipo_entrega']=='Delivery'){ ?>
     <p align="center">
         <form method="POST" action="actualizar_delivery_ref">
             <input type="hidden" name="pedido_id" value="<?php echo $pedido['id']; ?>">
@@ -77,6 +81,7 @@ if($pedido){
             </table>
         </form>
     </p>
+    <?php } ?>
     <p>
         <table width="100%">
             <tr>
@@ -106,7 +111,7 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
         </table>
     </p>
     <p align="center">
-        <a href="" class="botones">Marcar como listo para despacho</a>
+        <a href="" class="botones">Marcar como entregado</a>
     </p>
 
     <?php

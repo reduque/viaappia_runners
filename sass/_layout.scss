@@ -85,10 +85,10 @@ table.pedido{
             margin-top: 1rem;
             font-family: $antonio;
         }
-        @media only screen and (max-width:641px) {
+        @media only screen and (max-width:961px) {
             width: 48%;
         }
-        @media only screen and (max-width:441px) {
+        @media only screen and (max-width:641px) {
             width: 98%;
         }
     }
