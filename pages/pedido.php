@@ -1,14 +1,23 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, created_at from orders where id=" . $id;
+$sql="Select id, created_at, tipo_entrega, hora_desde, hora_hasta, delivery_ref from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
     ?>
     <p>
         <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?><br>
-        <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?>
+        <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?><br>
+        <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega']; ?>
+        <?php
+        if($pedido['delivery_ref']<>''){
+            ?><br><b>Refelencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
+        }
+        if($pedido['tipo_entrega']=='Pick up'){ 
+            echo '<br><b>Hora estimado de retiro:</b> ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
+        }
+        ?>
     </p>
     <br>
     <table class="pedido">
@@ -56,7 +65,7 @@ if($pedido){
                 </ul>
             </td>
             <td class="cant">
-                <select class="cantidad"><?php
+                <select class="cantidad" style="font-size: 2rem;"><?php
                 for($l=0; $l <= $item['cantidad']; $l++){
                     ?><option <?php if($cantidad == $l) echo 'selected'; ?>><?php echo $l ?></option><?php
                 }?></select>
@@ -65,7 +74,7 @@ if($pedido){
     <?php } ?>
     </table>
     <p align="center">
-        <a href="" class="botones">Enviar</a>
+        <a href="" class="botones">Aprobar / Notificar</a>
     </p>
     <?php
 }

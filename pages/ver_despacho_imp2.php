@@ -46,12 +46,6 @@ if($pedido){
         if( $item['variante'] <> ''){
             $salida.=ancholinea($item['variante'] );
         }
-        if( $item['container_id'] <> ''){
-            $sql="select nombre from containers where id=" . $item['container_id'];
-            $contenedor=lee1o($sql);
-            $salida.=ancholinea('Peso: ' . $item['peso'] );
-            $salida.=ancholinea('Raciones: ' . $item['porciones'] . ' (' . $contenedor->nombre . ')' );
-        }
         $u='';
         $contornos='';
         if( $item['sidedish_alias1'] <> ''){

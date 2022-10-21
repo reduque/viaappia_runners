@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta from orders where id=" . $id;
+$sql="Select id, estatus, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -72,7 +72,7 @@ if($pedido){
     <p align="center">
         <form method="POST" action="actualizar_delivery_ref">
             <input type="hidden" name="pedido_id" value="<?php echo $pedido['id']; ?>">
-            <label><b>Refelencia de la empresa de delivery</b></label>
+            <label><b>Referencia de la empresa de delivery</b></label>
             <table width="100%">
                 <tr>
                     <td><input name="delivery_ref" type="text" maxlength="50" value="<?php echo $pedido['delivery_ref']; ?>" require></td>
@@ -81,11 +81,14 @@ if($pedido){
             </table>
         </form>
     </p>
-    <?php } ?>
+    <?php }
+    if($pedido['estatus'] == 6){ ?>
     <p>
         <table width="100%">
             <tr>
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
+                <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
+
                 <?php if($pedido['tipo_entrega']=='Delivery'){ 
                 if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
                     $m_efectivo='Monto en efectivo: $' . $pedido['monto_efectivo'] . '
@@ -95,7 +98,7 @@ Seriales billetes:
                     $m_efectivo='No recibe efectivo.';
                 }
                 ?>
-                <td align="right"><a href="https://wa.me/584149067303?text=<?php
+                <td align="right"><a href="https://wa.me/584242973067?text=<?php
 echo urlencode('*INFORMACIÓN DE ENTREGA*
 Referencia: ' . str_pad($id , 5, "0", STR_PAD_LEFT) . '
 Nombre y apellido: ' . $pedido['nombre'] . '
@@ -111,34 +114,84 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
         </table>
     </p>
     <p align="center">
-        <a href="" class="botones">Marcar como entregado</a>
+        <a href="" class="botones procesarpedido">Marcar como <?php echo ($pedido['tipo_entrega']=='Delivery') ? 'enviado' : 'entregado' ;   ?></a>
     </p>
-
-    <?php
+    <?php }else{ ?>
+    <p align="center">
+        <a href="" class="botones procesarpedido2">Marcar como entregado</a>
+    </p>
+    <?php }
 }
 ?>
 <script>
     $(document).ready(function(){
-        $('.botones').click(function(e){
+        $('.procesarpedido').click(function(e){
             e.preventDefault();
             if(confirm('¿Está seguro de despachar este pedido?')){
                 document.location="despachar?id=<?php echo $id; ?>";
+            }
+        })
+        $('.procesarpedido2').click(function(e){
+            e.preventDefault();
+            if(confirm('¿Está seguro de marcar como entregado este pedido?')){
+                document.location="entregar?id=<?php echo $id; ?>";
             }
         })
     })
     function printDiv(){
         $.ajax({
             type: "GET",
-            dataType: "html",
+            dataType: "json",
             url: "ver_despacho_imp?id=<?php echo $pedido['id']; ?>",
-            success: function(data){
-                
+            success: function(data){                
+                $.each(data, function(i,linea) {
+                    var url = "https://runners.viaappia.com.ve/imp1.php?p=28&t=" + linea;
+                    
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", url);
+                    xhr.onreadystatechange = function () {
+                    };
+                    xhr.send();
+                    delete xhr; 
+                });
+
+                alert('Pedido enviado');
+                /*
                 var newWin=window.open('','Print-Window');
                 newWin.document.open();
                 newWin.document.write(data);
                 newWin.document.close();
                 setTimeout(function(){newWin.close();},10);
+                */
 
+            }
+        })
+    }
+    function printDiv2(){
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "ver_despacho_imp2?id=<?php echo $pedido['id']; ?>",
+            success: function(data){                
+                $.each(data, function(i,linea) {
+                    var url = "https://runners.viaappia.com.ve/imp1.php?p=28&t=" + linea;
+                    
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", url);
+                    xhr.onreadystatechange = function () {
+                    };
+                    xhr.send();
+                    delete xhr; 
+                });
+
+                alert('Pedido enviado');
+                /*
+                var newWin=window.open('','Print-Window');
+                newWin.document.open();
+                newWin.document.write(data);
+                newWin.document.close();
+                setTimeout(function(){newWin.close();},10);
+                */
 
             }
         })

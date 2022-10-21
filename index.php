@@ -29,8 +29,9 @@ Route::add('/ingresar',function(){
             exit;
         }
     }
-    $q->close();
+    //$q->close();
     header('Location: login?error=1');
+    exit;
 },'post');
 
 Route::add('/asignar_device_token',function(){
@@ -91,7 +92,7 @@ Route::add('/tomar_pedido',function(){
 },'get','login');
 
 Route::add('/tomar_yo',function(){
-    $sql="Select id, user_id from orders where (estatus=1 or estatus=6) and id=" . rqq('id');
+    $sql="Select id, user_id from orders where (estatus=1 or estatus=6 or estatus=7) and id=" . rqq('id');
     $r=lee1($sql);
     if($r){
         $runner_id=decodifica($_SESSION['api_id']);
@@ -106,7 +107,8 @@ Route::add('/tomar_yo',function(){
         $sql=crea_update('users', ['order_estatus' => 1, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $r['user_id'] . "'");
         $GLOBALS['mysqli']->query($sql);
         */
-        header('Location: /pedido?id=' . $r['id']);
+        header('Location: /');
+        //header('Location: /pedido?id=' . $r['id']);
         exit;
     }
     header('Location: /?estado=0');
@@ -209,6 +211,10 @@ Route::add('/ver_despacho_imp',function(){
     $id=rqq('id');
     include('pages/ver_despacho_imp.php');
 },'get');
+Route::add('/ver_despacho_imp2',function(){
+    $id=rqq('id');
+    include('pages/ver_despacho_imp2.php');
+},'get');
 
 Route::add('/despachar',function(){
     $id=rqq('id');
@@ -233,7 +239,67 @@ Route::add('/despachar',function(){
     header('Location: /');
 },'get','login');
 
+Route::add('/entregar',function(){
+    $id=rqq('id');
 
+    $estatus = 8;
+    $data=[
+        'estatus' => $estatus,
+    ];
+    $sql=crea_update('orders', $data, " where id = " . $id);
+    $GLOBALS['mysqli']->query($sql);
+
+    header('Location: /');
+},'get','login');
+
+Route::add('/imp1',function(){
+    $botToken='5627721283:AAFeh4fz6vYCGiqeuCjnlA7X2t6_T2bAapA';
+
+/*
+
+    $website="https://api.telegram.org/bot".$botToken;
+    $chatId=5627721283;  //Receiver Chat Id
+    $params=[
+        'chat_id'=>$chatId,
+        'text'=>'This is my message !!!',
+    ];
+    $ch = curl_init($website . '/sendMessage');
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+
+    /*
+  */
+
+
+    /*
+    $id=rqq('id');
+    
+    echo 'prueba: ' . date('H:i');
+
+    $linea="\n";
+    $texto='Hola desde viaappia' . $linea . 'prueba'. $linea . $linea . $linea;
+    $pp= 'https://viaappia.ddns.net/imprime.php?p=28&t=' . $texto;
+    echo "<br>Resp file_get".file_get_contents($pp);
+
+    /*
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://viaappia.ddns.net/imprime.php?p=28&t=' . $texto); 
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+    //curl_setopt($ch, CURLOPT_HEADER, 0); 
+    $data = curl_exec($ch); 
+    echo $data;
+    curl_close($ch);
+    */
+
+},'get');
 
 
 
