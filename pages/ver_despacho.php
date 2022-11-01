@@ -86,9 +86,16 @@ if($pedido){
     <p>
         <table width="100%">
             <tr>
+                <td colspan="3">
+                    Impresora a usar: &nbsp;
+                    <label style="display: inline-block;"><input class="impresora imp28" name="impresora" type="radio" value="28">1</label> 
+                    <label style="display: inline-block;"><input class="impresora imp29" name="impresora" type="radio" value="29">2</label>
+                </td>
+            </tr>
+            <tr>
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
-
+                <td><a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar"></a></td>
                 <?php if($pedido['tipo_entrega']=='Delivery'){ 
                 if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
                     $m_efectivo='Monto en efectivo: $' . $pedido['monto_efectivo'] . '
@@ -125,6 +132,14 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
 ?>
 <script>
     $(document).ready(function(){
+        if (typeof localStorage.impresora === 'undefined') {
+            localStorage.impresora=28;
+        }
+        $('.imp' + localStorage.impresora).prop("checked",true);
+        $('.impresora').click(function(){
+            localStorage.impresora=($(this).val());
+        })
+        //alert(localStorage.impresora);
         $('.procesarpedido').click(function(e){
             e.preventDefault();
             if(confirm('¿Está seguro de despachar este pedido?')){
@@ -137,6 +152,19 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
                 document.location="entregar?id=<?php echo $id; ?>";
             }
         })
+        $('.facturar').click(function(event){
+            event.preventDefault();
+            url=$(this).attr("href");
+            if(confirm("¿Está seguro de facturar este pedido?")){
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function(){
+                        alert('Pedido facturado');
+                    }
+                })
+            }
+        })
     })
     function printDiv(){
         $.ajax({
@@ -145,7 +173,7 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
             url: "ver_despacho_imp?id=<?php echo $pedido['id']; ?>",
             success: function(data){                
                 $.each(data, function(i,linea) {
-                    var url = "https://runners.viaappia.com.ve/imp1.php?p=28&t=" + linea;
+                    var url = "https://runners.viaappia.com.ve/imp1.php?p=" + localStorage.impresora + "&t=" + linea;
                     
                     var xhr = new XMLHttpRequest();
                     xhr.open("GET", url);

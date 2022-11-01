@@ -191,6 +191,7 @@ Route::add('/procesar',function(){
 
 Route::add('/ver_despacho',function(){
     $id=rqq('id');
+    $idc=codifica($id);
     $childView = 'pages/ver_despacho.php';
     include('pages/layout.php');
 },'get','login');
@@ -234,7 +235,8 @@ Route::add('/despachar',function(){
     $GLOBALS['mysqli']->query($sql);
 
     if($usuario->device_token){
-        enviar_push('/pedido/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
+        //if($usuario->tipo_entrega == 'Delivery')
+        enviar_push('/compra/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
     }
     header('Location: /');
 },'get','login');

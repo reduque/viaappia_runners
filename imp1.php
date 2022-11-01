@@ -13,3 +13,13 @@ try {
 } catch (Exception $e) {
    echo '<h4>Error de conexión con servidor. Favor intenta mas tarde</h4>'; exit;
 }
+
+/*
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, 'https://maxchadwick.xyz');
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+curl_setopt($ch, CURLOPT_POSTFIELDS, 'THIS IS THE REQUEST BODY');
+
+curl_exec($ch);
+*/
