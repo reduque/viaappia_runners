@@ -66,7 +66,19 @@ if($pedido){
         $salida.=ancholinea(' ');
     }
     $salida.=ancholinea(' ');
-    $salida.=ancholinea('%0A');
+    $salida.=ancholinea(' ');
 }
 
-echo '["' . $salida . '"]';
+
+$params= '["' . $salida . '"]';
+$params=[
+    "c" => 1,
+    "p" => rqq('p'),
+    "t" => $salida
+];
+
+/*
+var_dump($params);
+exit;
+*/
+include('imp1.php');

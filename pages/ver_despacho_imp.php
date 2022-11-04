@@ -16,10 +16,9 @@ function ancholinea($p){
 $sql="Select id, delivery_ref, tipo_entrega, user_id, hora_desde, hora_hasta, created_at from orders where id=" . $id;
 $pedido=lee1($sql);
 
+
 $sql="Select name from users where id=" . $pedido['user_id'];
 $usuario=lee1($sql);
-
-
 if($pedido){
     
     $salida.=ancholinea('Pedido: ' . str_pad($id , 5, "0", STR_PAD_LEFT) );
@@ -72,7 +71,18 @@ if($pedido){
         $salida.=ancholinea(' ');
     }
     $salida.=ancholinea(' ');
-    $salida.=ancholinea('%0A');
+    $salida.=ancholinea(' ');
 }
 
-echo '["' . $salida . '"]';
+$params= '["' . $salida . '"]';
+$params=[
+    "c" => 1,
+    "p" => rqq('p'),
+    "t" => $salida
+];
+
+/*
+var_dump($params);
+exit;
+*/
+include('imp1.php');

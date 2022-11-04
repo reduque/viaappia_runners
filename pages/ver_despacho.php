@@ -95,7 +95,7 @@ if($pedido){
             <tr>
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
-                <td><a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar"></a></td>
+                <td><a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar">Facturar</a></td>
                 <?php if($pedido['tipo_entrega']=='Delivery'){ 
                 if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
                     $m_efectivo='Monto en efectivo: $' . $pedido['monto_efectivo'] . '
@@ -169,9 +169,9 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
     function printDiv(){
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: "ver_despacho_imp?id=<?php echo $pedido['id']; ?>",
-            success: function(data){                
+            url: "ver_despacho_imp?id=<?php echo $pedido['id']; ?>&p=" + localStorage.impresora,
+            success: function(data){
+                /*        
                 $.each(data, function(i,linea) {
                     var url = "https://runners.viaappia.com.ve/imp1.php?p=" + localStorage.impresora + "&t=" + linea;
                     
@@ -182,7 +182,7 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
                     xhr.send();
                     delete xhr; 
                 });
-
+                */
                 alert('Pedido enviado');
                 /*
                 var newWin=window.open('','Print-Window');
@@ -198,9 +198,9 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
     function printDiv2(){
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: "ver_despacho_imp2?id=<?php echo $pedido['id']; ?>",
-            success: function(data){                
+            url: "ver_despacho_imp2?id=<?php echo $pedido['id']; ?>&p=" + localStorage.impresora,
+            success: function(data){
+                /*      
                 $.each(data, function(i,linea) {
                     var url = "https://runners.viaappia.com.ve/imp1.php?p=28&t=" + linea;
                     
@@ -211,6 +211,7 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
                     xhr.send();
                     delete xhr; 
                 });
+                */
 
                 alert('Pedido enviado');
                 /*
