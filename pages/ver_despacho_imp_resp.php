@@ -36,7 +36,7 @@
             <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega']; ?>
             <?php
             if($pedido['delivery_ref']<>''){
-                ?><br><b>Refelencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
+                ?><br><b>Referencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
             }
             ?>
         </p>

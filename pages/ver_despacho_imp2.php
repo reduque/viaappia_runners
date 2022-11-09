@@ -32,7 +32,7 @@ if($pedido){
     $salida.=ancholinea('Cliente: ' . $usuario['name']);
 
     if($pedido['delivery_ref']<>''){
-        $salida.=ancholinea('Refelencia de la empresa de delivery: ' .  $pedido['delivery_ref'] );
+        $salida.=ancholinea('Referencia de la empresa de delivery: ' .  $pedido['delivery_ref'] );
     }
     $salida.=ancholinea(' ');
     $sql="Select * from order_products where order_id=" . $id;

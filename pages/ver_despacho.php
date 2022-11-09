@@ -12,7 +12,7 @@ if($pedido){
         <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega']; ?>
         <?php
         if($pedido['delivery_ref']<>''){
-            ?><br><b>Refelencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
+            ?><br><b>Referencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
         }
         if($pedido['tipo_entrega']=='Pick up'){ 
             echo '<br><b>Hora estimado de retiro:</b> ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
