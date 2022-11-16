@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, estatus, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta from orders where id=" . $id;
+$sql="Select id, user_id, estatus, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -17,6 +17,9 @@ if($pedido){
         if($pedido['tipo_entrega']=='Pick up'){ 
             echo '<br><b>Hora estimado de retiro:</b> ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
         }
+        $sql="select name, telefonos from users where id=" . $pedido['user_id'];
+        $usuario=lee1o($sql);
+        echo '<br><b>Cliente: </b>' . $usuario->name . ' ' . $usuario->telefonos;
         ?>
     </p>
     <br>
@@ -95,7 +98,13 @@ if($pedido){
             <tr>
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
-                <td><a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar">Facturar</a></td>
+                <td>
+                <?php if($pedido['facturado']==1){ ?>
+                    Mesa: <?php echo $pedido['mesa']; ?>
+                <?php }else{
+                    ?><a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar">Facturar</a><?php
+                } ?>
+                </td>
                 <?php if($pedido['tipo_entrega']=='Delivery'){ 
                 if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
                     $m_efectivo='Monto en efectivo: $' . $pedido['monto_efectivo'] . '
@@ -161,6 +170,7 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
                     url: url,
                     success: function(){
                         alert('Pedido facturado');
+                        window.location.reload();
                     }
                 })
             }
