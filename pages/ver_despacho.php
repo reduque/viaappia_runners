@@ -99,11 +99,14 @@ if($pedido){
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
                 <td>
-                <?php if($pedido['facturado']==1){ ?>
-                    Mesa: <?php echo $pedido['mesa']; ?>
-                <?php }else{
-                    ?><a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar">Facturar</a><?php
-                } ?>
+                <?php if( $pedido['forma_pago']=='PagoMovil' ){ ?>
+                    <b>Forma de pago: </b><?php echo $pedido['forma_pago']; ?>
+                    <?php if($pedido['facturado']==1){ ?>
+                        <br>Mesa: <?php echo $pedido['mesa']; ?>
+                    <?php }else{
+                        ?>&nbsp; &nbsp;<a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar">Facturar</a><?php
+                    }
+                }?>
                 </td>
                 <?php if($pedido['tipo_entrega']=='Delivery'){ 
                 if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
