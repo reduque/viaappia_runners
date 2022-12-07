@@ -132,3 +132,12 @@ table.pedido{
         border-radius: 0.5rem;
     }
 }
+.alert_fecha{
+    padding: 2px 5px;
+    background: brown;
+    color: #fff;
+    display: block;
+    * {
+        color: #fff;
+    }
+}

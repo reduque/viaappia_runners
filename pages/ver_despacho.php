@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, user_id, estatus, delivery_ref, created_at, tipo_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa from orders where id=" . $id;
+$sql="Select id, user_id, estatus, delivery_ref, created_at, tipo_entrega, dia_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -9,7 +9,7 @@ if($pedido){
     <p>
         <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?><br>
         <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?><br>
-        <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega']; ?>
+        <span <?php if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))) echo 'class="alert_fecha"'; ?>><b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega'] . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega'])); ?></span>
         <?php
         if($pedido['delivery_ref']<>''){
             ?><br><b>Referencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
