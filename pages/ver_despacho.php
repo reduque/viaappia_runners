@@ -9,14 +9,39 @@ if($pedido){
     <p>
         <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?><br>
         <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?><br>
-        <span <?php if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))) echo 'class="alert_fecha"'; ?>><b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega'] . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega'])); ?></span>
+        <?php
+        $class_alert = '';
+        if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))){
+            $class_alert = 'class="alerta_fechas rojo"';
+        }else{
+            if($pedido['hora_desde']) if(date('Y-m-d',strtotime($pedido['dia_entrega'])) == date('Y-m-d')){
+                $hour = date('H');
+                $minute = (date('i')>30)?'30':'00';
+                $hora=strtotime($hour . ':' . $minute . ':00');
+                $hora=strtotime("+30 MINUTE",$hora);
+                $hora=date('h:i A',$hora);
+                if(array_search($pedido['hora_desde'], horas_array()) - 4 >= array_search($hora, horas_array())){
+                    $class_alert = 'class="alerta_fechas naranja"';
+                }
+            }
+        }
+        ?>
+        <span <?php echo $class_alert; ?>>
+            <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega'] . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega']));
+            if($pedido['hora_desde']){
+                echo ', ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
+            }
+            ?>
+        </span>
         <?php
         if($pedido['delivery_ref']<>''){
             ?><br><b>Referencia de la empresa de delivery: </b><?php echo $pedido['delivery_ref'];
         }
+        /*
         if($pedido['tipo_entrega']=='Pick up'){ 
             echo '<br><b>Hora estimado de retiro:</b> ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
         }
+        */
         $sql="select name, telefonos from users where id=" . $pedido['user_id'];
         $usuario=lee1o($sql);
         echo '<br><b>Cliente: </b>' . $usuario->name . ' ' . $usuario->telefonos;
