@@ -1,8 +1,5 @@
 <h1>Pedidos</h1>
-
-
 <section class="fichas ordenes"></section>
-
 <script>
 $(document).ready(function(){
     function cargar(){
