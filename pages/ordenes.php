@@ -65,7 +65,35 @@ if($r->num_rows>0){
             <div>
                 <div>Listo para despacho (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?>
                 <?php if($pedido['delivery_ref'] <> '') echo ' - ' . $pedido['delivery_ref']; ?>
-                )<br><?php echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : ''); if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos']; ?></div>
+                )<br><?php 
+                    /*
+                    echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : ''); if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos'];
+                    */
+                    $class_alert = '';
+                    if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))){
+                        $class_alert = 'class="alerta_fechas rojo"';
+                    }else{
+                        if($pedido['hora_desde']) if(date('Y-m-d',strtotime($pedido['dia_entrega'])) == date('Y-m-d')){
+                            $hour = date('H');
+                            $minute = (date('i')>30)?'30':'00';
+                            $hora=strtotime($hour . ':' . $minute . ':00');
+                            $hora=strtotime("+30 MINUTE",$hora);
+                            $hora=date('h:i A',$hora);
+                            if(array_search($pedido['hora_desde'], horas_array()) - 4 >= array_search($hora, horas_array())){
+                                $class_alert = 'class="alerta_fechas naranja"';
+                            }
+                        }
+                    }
+
+                    echo '<span '. $class_alert . '>';
+                    echo $pedido['tipo_entrega'] . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega']));
+                    if($pedido['hora_desde']) {
+                        echo '<br>' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
+                    }
+                    echo '</span>';
+                    ?><br><b><?php echo $pedido['name']; 
+                    ?></b><br><?php echo $pedido['telefonos'];
+                ?></div>
                 <a href="ver_despacho?id=<?php echo $id; ?>">Preparar pedido</a>
             </div>
         </article>
@@ -101,7 +129,35 @@ if($r->num_rows>0){
         ?>
         <article class="n">
             <div>
-                <div>Tomados por otro runner (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?>)<br><?php echo $pedido['runner_name']; ?><br><?php echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : ''); if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos']; ?></div>
+                <div>Tomados por otro runner (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?>)<br><?php echo $pedido['runner_name']; ?><br>
+                <?php 
+                
+                $class_alert = '';
+                if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))){
+                    $class_alert = 'class="alerta_fechas rojo"';
+                }else{
+                    if($pedido['hora_desde']) if(date('Y-m-d',strtotime($pedido['dia_entrega'])) == date('Y-m-d')){
+                        $hour = date('H');
+                        $minute = (date('i')>30)?'30':'00';
+                        $hora=strtotime($hour . ':' . $minute . ':00');
+                        $hora=strtotime("+30 MINUTE",$hora);
+                        $hora=date('h:i A',$hora);
+                        if(array_search($pedido['hora_desde'], horas_array()) - 4 >= array_search($hora, horas_array())){
+                            $class_alert = 'class="alerta_fechas naranja"';
+                        }
+                    }
+                }
+                echo '<span '. $class_alert . '>';
+                echo $pedido['tipo_entrega'] . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega']));
+                if($pedido['hora_desde']) {
+                    echo '<br>' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
+                }
+                echo '</span>';
+                
+                
+                ?>
+                
+                <br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos']; ?></div>
                 <a href="tomar_yo?id=<?php echo $pedido['id']; ?>">Tomar yo</a>
             </div>
         </article>
