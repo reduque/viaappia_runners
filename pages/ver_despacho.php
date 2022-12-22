@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, user_id, estatus, delivery_ref, created_at, tipo_entrega, dia_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa from orders where id=" . $id;
+$sql="Select id, user_id, estatus, delivery_sku, delivery_ref, created_at, tipo_entrega, dia_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -25,9 +25,10 @@ if($pedido){
                 }
             }
         }
+        $es_carro = ($pedido['delivery_sku'] == '4246') ? ' Carro' : '';
         ?>
         <span <?php echo $class_alert; ?>>
-            <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega'] . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega']));
+            <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega'] . $es_carro . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega']));
             if($pedido['hora_desde']){
                 echo ', ' . $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];
             }
