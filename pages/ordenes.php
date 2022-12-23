@@ -21,7 +21,24 @@ $sql="Select orders.id, users.name, users.telefonos, tipo_entrega, hora_desde, h
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
+    //ordenar
+    $pedidos=[];
     foreach($r as $pedido){
+        $temp=$pedido;
+        $temp['freal'] = strtotime($pedido['dia_entrega'] . ' ' . $pedido['hora_desde']);
+        $pedidos[]=$temp;
+    }
+    for($l=0; $l<count($pedidos) - 1; $l++){
+        for($i=$l+1; $i<count($pedidos); $i++){
+            if($pedidos[$l]['freal'] > $pedidos[$i]['freal']){
+                $temp = $pedidos[$l];
+                $pedidos[$l] = $pedidos[$i];
+                $pedidos[$i]=$temp;
+            }
+        }
+    }
+    //fin ordenar    
+    foreach($pedidos as $pedido){
         $id=strval($pedido['id']);
         ?>
         <article class="a">
@@ -38,7 +55,24 @@ $sql="Select orders.id, orders.forma_pago, users.name, users.telefonos, tipo_ent
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
+    //ordenar
+    $pedidos=[];
     foreach($r as $pedido){
+        $temp=$pedido;
+        $temp['freal'] = strtotime($pedido['dia_entrega'] . ' ' . $pedido['hora_desde']);
+        $pedidos[]=$temp;
+    }
+    for($l=0; $l<count($pedidos) - 1; $l++){
+        for($i=$l+1; $i<count($pedidos); $i++){
+            if($pedidos[$l]['freal'] > $pedidos[$i]['freal']){
+                $temp = $pedidos[$l];
+                $pedidos[$l] = $pedidos[$i];
+                $pedidos[$i]=$temp;
+            }
+        }
+    }
+    //fin ordenar
+    foreach($pedidos as $pedido){
         $id=strval($pedido['id']);
         ?>
         <article class="b">
@@ -58,7 +92,24 @@ $sql="Select orders.id, users.name, users.telefonos, tipo_entrega, hora_desde, h
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
+    //ordenar
+    $pedidos=[];
     foreach($r as $pedido){
+        $temp=$pedido;
+        $temp['freal'] = strtotime($pedido['dia_entrega'] . ' ' . $pedido['hora_desde']);
+        $pedidos[]=$temp;
+    }
+    for($l=0; $l<count($pedidos) - 1; $l++){
+        for($i=$l+1; $i<count($pedidos); $i++){
+            if($pedidos[$l]['freal'] > $pedidos[$i]['freal']){
+                $temp = $pedidos[$l];
+                $pedidos[$l] = $pedidos[$i];
+                $pedidos[$i]=$temp;
+            }
+        }
+    }
+    //fin ordenar
+    foreach($pedidos as $pedido){
         $id=strval($pedido['id']);
         ?>
         <article class="v">
@@ -105,7 +156,24 @@ $sql="Select orders.id, users.name, users.telefonos, tipo_entrega, hora_desde, h
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
+    //ordenar
+    $pedidos=[];
     foreach($r as $pedido){
+        $temp=$pedido;
+        $temp['freal'] = strtotime($pedido['dia_entrega'] . ' ' . $pedido['hora_desde']);
+        $pedidos[]=$temp;
+    }
+    for($l=0; $l<count($pedidos) - 1; $l++){
+        for($i=$l+1; $i<count($pedidos); $i++){
+            if($pedidos[$l]['freal'] > $pedidos[$i]['freal']){
+                $temp = $pedidos[$l];
+                $pedidos[$l] = $pedidos[$i];
+                $pedidos[$i]=$temp;
+            }
+        }
+    }
+    //fin ordenar
+    foreach($pedidos as $pedido){
         $id=strval($pedido['id']);
         ?>
         <article class="v">
@@ -124,7 +192,24 @@ $sql="Select orders.id, b.name as runner_name, users.name, users.telefonos, tipo
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
+    //ordenar
+    $pedidos=[];
     foreach($r as $pedido){
+        $temp=$pedido;
+        $temp['freal'] = strtotime($pedido['dia_entrega'] . ' ' . $pedido['hora_desde']);
+        $pedidos[]=$temp;
+    }
+    for($l=0; $l<count($pedidos) - 1; $l++){
+        for($i=$l+1; $i<count($pedidos); $i++){
+            if($pedidos[$l]['freal'] > $pedidos[$i]['freal']){
+                $temp = $pedidos[$l];
+                $pedidos[$l] = $pedidos[$i];
+                $pedidos[$i]=$temp;
+            }
+        }
+    }
+    //fin ordenar    
+    foreach($pedidos as $pedido){
         $id=strval($pedido['id']);
         ?>
         <article class="n">
