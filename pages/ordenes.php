@@ -1,6 +1,6 @@
 
 <?php
-
+$sonaralarma=false;
 $haypedidot=false;
 $runner_id=decodifica($_SESSION['api_id']);
 
@@ -51,7 +51,7 @@ if($r->num_rows>0){
     }
 }
 
-$sql="Select orders.id, orders.forma_pago, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join users on orders.user_id=users.id where estatus in (2,3,4,5) and runner_id=" . $runner_id;
+$sql="Select orders.id, estatus, fecha_confirmacion, orders.forma_pago, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join users on orders.user_id=users.id where estatus in (2,3,4,5) and runner_id=" . $runner_id;
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
@@ -82,10 +82,31 @@ if($r->num_rows>0){
                     echo '<br><span style="color: red">Pago con Zelle</span>';
                 }
                 ?><br><?php echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : ''); if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos']; ?></div>
+                <?php
+                if($pedido['estatus'] == 3){
+                    $to_time = time();
+                    $from_time = strtotime($pedido['fecha_confirmacion']);
+                    $difencia = ($to_time - $from_time) / 60;
+                    $clase='';
+                    // echo $difencia;
+                    if($difencia <= 12){
+                        $clase=' class="verde"';
+                    }else if($difencia <= 14){
+                        $clase=' class="amarillo"';
+                        $sonaralarma=true;
+                    }else{
+                        $sonaralarma=true;
+                    }
+                    $difencia = round(100 * $difencia / 15);
+                    if($difencia>100) $difencia=100;
+                    ?><div class="b_progreso"><div<?php echo $clase;?> style="width: <?php echo $difencia; ?>%;"></div></div><?php
+                } ?>
             </div>
         </article>
     <?php
     }
+    if($sonaralarma) echo "<script>audio.play();</script>";
+
 }
 
 $sql="Select orders.id, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega, delivery_ref from orders join users on orders.user_id=users.id where estatus=6 and runner_id=" . $runner_id;
@@ -249,5 +270,5 @@ if($r->num_rows>0){
     <?php
     }
 }
-if(!$haypedidot){ ?><p>No hay pedidos pendientes</p><?php }
 
+if(!$haypedidot){ ?><p>No hay pedidos pendientes</p><?php }

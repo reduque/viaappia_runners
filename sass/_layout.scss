@@ -146,3 +146,20 @@ table.pedido{
         background: orange;
     }
 }
+
+.b_progreso{
+    border: 1px solid #ccc;
+    margin-top: 1rem;
+    height: 0.5rem;
+    background: #fff;
+    div{
+        height: 0.5rem;
+        background: red;
+        &.amarillo{
+            background: yellow;
+        }
+        &.verde{
+            background: green;
+        }
+    }
+}

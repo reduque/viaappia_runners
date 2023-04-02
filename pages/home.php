@@ -17,4 +17,6 @@ $(document).ready(function(){
     }
     cargar();
 })
+const audio = new Audio('./sonido/alerta.wav');
+
 </script>

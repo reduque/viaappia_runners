@@ -46,6 +46,10 @@ if($pedido){
         $sql="select name, telefonos from users where id=" . $pedido['user_id'];
         $usuario=lee1o($sql);
         echo '<br><b>Cliente: </b>' . $usuario->name . ' ' . $usuario->telefonos;
+        if($pedido['tipo_entrega']=='Pick up' and ( $pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto')){ 
+            echo '<br><b>Forma de pago:</b> ' . $pedido['forma_pago'] . ': Bs. ' . $pedido['monto_efectivo'] . '<br>' . nl2br($pedido['seriales_billetes']);
+        }
+
         ?>
     </p>
     <br>
