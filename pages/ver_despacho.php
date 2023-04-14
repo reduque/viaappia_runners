@@ -94,6 +94,9 @@ if($pedido){
                 if( $item['horneado']){
                     echo '<li>' . 'Horneado' . '</li>';
                 }
+                if( $item['empacado']){
+                    echo '<li>' . 'Empacado al vacio' . '</li>';
+                }
                 ?>
                 </ul>
             </td>

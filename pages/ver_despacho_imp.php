@@ -67,6 +67,9 @@ if($pedido){
         if( $item['horneado']){
             $salida.=ancholinea('Horneado' );
         }
+        if( $item['empacado']){
+            $salida.=ancholinea('Empacado al vacio' );
+        }
         $salida.=ancholinea('Cantidad: ' . $item['cantidad'] );
         $salida.=ancholinea(' ');
     }
