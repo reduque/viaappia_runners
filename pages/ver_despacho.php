@@ -25,7 +25,7 @@ if($pedido){
                 }
             }
         }
-        $es_carro = ($pedido['delivery_sku'] == '4246') ? ' Carro' : '';
+        $es_carro = ($pedido['delivery_sku'] == '4873') ? ' Volumen' : '';
         ?>
         <span <?php echo $class_alert; ?>>
             <b>Tipo de entrega: </b><?php echo $pedido['tipo_entrega'] . $es_carro . ' ' . date('d/m/Y',strtotime($pedido['dia_entrega']));
