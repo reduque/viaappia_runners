@@ -64,6 +64,9 @@ if($pedido){
         if( $item['empacado']){
             $salida.=ancholinea('Empacado al vacio' );
         }
+        if( $item['cubierto']){
+            $salida.=ancholinea('Con cubiertos' );
+        }
         $salida.=ancholinea('Cantidad: ' . $item['cantidad'] );
         $salida.=ancholinea(' ');
     }

@@ -87,6 +87,9 @@ if($pedido){
                 if( $item['empacado']){
                     echo '<li>' . 'Empacado al vacio' . '</li>';
                 }
+                if( $item['cubierto']){
+                    echo '<li>' . 'Con cubiertos' . '</li>';
+                }
                 ?>
                 </ul>
             </td>
