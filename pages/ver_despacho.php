@@ -46,7 +46,7 @@ if($pedido){
         $sql="select name, telefonos from users where id=" . $pedido['user_id'];
         $usuario=lee1o($sql);
         echo '<br><b>Cliente: </b>' . $usuario->name . ' ' . $usuario->telefonos;
-        if($pedido['tipo_entrega']=='Pick up' and ( $pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto')){ 
+        if($pedido['tipo_entrega']=='Pick up' and ( $pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto' or $pedido['forma_pago']=='Mixto2')){ 
             echo '<br><b>Forma de pago:</b> ' . $pedido['forma_pago'] . ': Bs. ' . $pedido['monto_efectivo'] . '<br>' . nl2br($pedido['seriales_billetes']);
         }
 
@@ -136,7 +136,7 @@ if($pedido){
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
                 <td>
-                <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' ){ ?>
+                <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' or $pedido['forma_pago']=='PuntoVenta' ){ ?>
                     <b>Forma de pago: </b><?php echo $pedido['forma_pago']; ?>
                     <?php if($pedido['facturado']==1){ ?>
                         <br>Mesa: <?php echo $pedido['mesa']; ?>
@@ -146,7 +146,7 @@ if($pedido){
                 }?>
                 </td>
                 <?php if($pedido['tipo_entrega']=='Delivery'){ 
-                if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto'){
+                if($pedido['forma_pago']=='Efectivo' or $pedido['forma_pago']=='Mixto' or $pedido['forma_pago']=='Mixto2'){
                     $m_efectivo='Monto en efectivo: $' . $pedido['monto_efectivo'] . '
 Seriales billetes:
 ' . $pedido['seriales_billetes'];
