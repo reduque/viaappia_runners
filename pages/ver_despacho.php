@@ -136,7 +136,7 @@ if($pedido){
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
                 <td>
-                <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' or $pedido['forma_pago']=='PuntoVenta' ){ ?>
+                <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' or $pedido['forma_pago']=='PuntoVenta' or $pedido['forma_pago']=='Mixto2' ){ ?>
                     <b>Forma de pago: </b><?php echo $pedido['forma_pago']; ?>
                     <?php if($pedido['facturado']==1){ ?>
                         <br>Mesa: <?php echo $pedido['mesa']; ?>
