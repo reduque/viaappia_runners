@@ -13,7 +13,7 @@ function ancholinea($p){
     return $p . $l;
     //return str_pad($p , 42, " ", STR_PAD_RIGHT);
 }
-$sql="Select id, delivery_ref, tipo_entrega, user_id, dia_entrega, hora_desde, hora_hasta, created_at from orders where id=" . $id;
+$sql="Select id, delivery_ref, tipo_entrega, user_id, dia_entrega, hora_desde, hora_hasta, tienda, created_at from orders where id=" . $id;
 $pedido=lee1($sql);
 
 $sql="Select name from users where id=" . $pedido['user_id'];
@@ -22,7 +22,7 @@ $usuario=lee1($sql);
 
 if($pedido){
     
-    $salida.=ancholinea('Pedido: ' . str_pad($id , 5, "0", STR_PAD_LEFT) );
+    $salida.=ancholinea('Pedido: ' . str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']);
     $salida.=ancholinea('Fecha: ' . date('d/m/Y H:i:s',strtotime($pedido['created_at'])) );
     $salida.=ancholinea('Tipo de entrega: ' . $pedido['tipo_entrega'] );
 

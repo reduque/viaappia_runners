@@ -158,6 +158,7 @@ Route::add('/procesar',function(){
     if($cambia){
         $data=[
             'estatus' => 2,
+            'tienda' => rqq('tienda'),
             'fecha_confirmacion' => date('Y-m-d H:i:s'),
         ];
         $sql=crea_update('orders', $data, " where id = " . $id);
@@ -172,6 +173,7 @@ Route::add('/procesar',function(){
     }else{
         $data=[
             'estatus' => 3,
+            'tienda' => rqq('tienda'),
             'fecha_confirmacion' => date('Y-m-d H:i:s'),
         ];
         $sql=crea_update('orders', $data, " where id = " . $id);

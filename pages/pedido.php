@@ -1,13 +1,13 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, created_at, tipo_entrega, hora_desde, hora_hasta, delivery_ref, dia_entrega from orders where id=" . $id;
+$sql="Select id, created_at, tipo_entrega, hora_desde, hora_hasta, delivery_ref, dia_entrega, tienda from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
     ?>
     <p>
-        <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT); ?><br>
+        <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']; ?><br>
         <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?><br>
         <?php
         $class_alert = '';
@@ -103,7 +103,8 @@ if($pedido){
     <?php } ?>
     </table>
     <p align="center">
-        <a href="" class="botones">Aprobar / Notificar</a>
+        <a href="" class="botones" data-tienda="TOL">Aprobar / Notificar (TOL)</a>
+        <a href="" class="botones" data-tienda="TRAILER">Aprobar / Notificar (TRAILER)</a>
     </p>
     <?php
 }
@@ -131,8 +132,14 @@ if($pedido){
         })
         $('.botones').click(function(e){
             e.preventDefault();
-            if(confirm('¿Está seguro de enviar este pedido?')){
-                document.location="procesar?id=<?php echo $id; ?>";
+            if($(this).data('tienda') == 'TRAILER'){
+                if(confirm('¿Está seguro de enviar este pedido y camniar la tienda?')){
+                    document.location="procesar?id=<?php echo $id; ?>&tienda=" + $(this).data('tienda');
+                }
+            }else{
+                if(confirm('¿Está seguro de enviar este pedido?')){
+                    document.location="procesar?id=<?php echo $id; ?>&tienda=" + $(this).data('tienda');
+                }
             }
         })
     })
