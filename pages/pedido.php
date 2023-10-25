@@ -103,8 +103,9 @@ if($pedido){
     <?php } ?>
     </table>
     <p align="center">
-        <a href="" class="botones" data-tienda="TOL">Aprobar / Notificar (TOL)</a>
-        <a href="" class="botones" data-tienda="TRAILER">Aprobar / Notificar (TRAILER)</a>
+        <a href="" class="botones" data-tienda="TOL">Aprobar / Notificar</a>
+        <!-- <a href="" class="botones" data-tienda="TOL">Aprobar / Notificar (TOL)</a>
+        <a href="" class="botones" data-tienda="TRAILER">Aprobar / Notificar (TRAILER)</a> -->
     </p>
     <?php
 }
