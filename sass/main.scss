@@ -9,6 +9,9 @@ $gris_oscuro: #454445;
 $crema: #f8ecda;
 $color_vino: #5c3327;
 $verde: green;
+$azul: blue;
+$naranja: orange;
+$rojo: red;
 
 //reset
 
@@ -201,6 +204,12 @@ a.botones, button{
     margin-top: 1rem;
     font-family: $antonio;
     font-size: 1rem;
+    &.naranja{
+        background: $naranja;
+    }
+    &.azul{
+        background: $azul;
+    }
     &:hover {
         background-color: $color_vino;
         color: #fff;

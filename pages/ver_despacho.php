@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, user_id, estatus, delivery_sku, delivery_ref, created_at, tipo_entrega, dia_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa from orders where id=" . $id;
+$sql="Select id, user_id, estatus, delivery_sku, delivery_ref, created_at, tipo_entrega, dia_entrega, nombre, ci, telefono, direccion, municipio, ubicacion, forma_pago, monto_efectivo, seriales_billetes, hora_desde, hora_hasta, facturado, mesa, ingreso_bs from orders where id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -137,8 +137,11 @@ if($pedido){
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
                 <td>
                 <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' or $pedido['forma_pago']=='PuntoVenta' or $pedido['forma_pago']=='Mixto2' ){ ?>
-                    <b>Forma de pago: </b><?php echo $pedido['forma_pago']; ?>
-                    <?php if($pedido['facturado']==1){ ?>
+                    <b>Forma de pago: </b><?php echo $pedido['forma_pago'];
+                    if($pedido['ingreso_bs'] > 0 or 1){
+                        echo '<br>Ingreso en Bs: ' . number_format($pedido['ingreso_bs'], 2, ',', '.');
+                    }
+                    if($pedido['facturado']==1){ ?>
                         <br>Mesa: <?php echo $pedido['mesa']; ?>
                     <?php }else{
                         ?>&nbsp; &nbsp;<a href="https://www.viaappia.com.ve/orden_facturar/<?php echo ($idc); ?>?origen=runners" class="botones facturar">Facturar</a><?php
@@ -153,8 +156,9 @@ Seriales billetes:
                 }else{
                     $m_efectivo='No recibe efectivo.';
                 }
+                echo '</tr><tr>';
                 ?>
-                <td align="right"><a href="https://wa.me/584242973067?text=<?php
+                <td align="center" colspan="3"><a href="https://wa.me/584242973067?text=<?php
 echo urlencode('*INFORMACIÓN DE ENTREGA*
 Referencia: ' . str_pad($id , 5, "0", STR_PAD_LEFT) . '
 Nombre y apellido: ' . $pedido['nombre'] . '
@@ -169,12 +173,23 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
             </tr>
         </table>
     </p>
+    <?php
+    $sql="SELECT id, nombre FROM areas WHERE id in ( select DISTINCT(area_id) from categories c join products p on c.id=p.category_id WHERE p.id in (select product_id from order_products where order_id=" . $id . "))";
+    $items=leen($sql);
+    foreach($items as $item){
+        ?>
+        <div class="areas">
+            <a href="javascript:" class="botones naranja" onclick="printArear(<?php echo $item['id']; ?>)">Imprimir comanda de: <?php echo $item['nombre']; ?></a>
+        </div>
+        <?php
+    }
+    ?>    
     <p align="center">
-        <a href="" class="botones procesarpedido">Marcar como <?php echo ($pedido['tipo_entrega']=='Delivery') ? 'enviado' : 'entregado' ;   ?></a>
+        <a href="" class="botones procesarpedido azul">Marcar como <?php echo ($pedido['tipo_entrega']=='Delivery') ? 'enviado' : 'entregado' ;   ?></a>
     </p>
     <?php }else{ ?>
     <p align="center">
-        <a href="" class="botones procesarpedido2">Marcar como entregado</a>
+        <a href="" class="botones procesarpedido2 azul">Marcar como entregado</a>
     </p>
     <?php }
 }
@@ -221,27 +236,7 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
             type: "GET",
             url: "ver_despacho_imp?id=<?php echo $pedido['id']; ?>&p=" + localStorage.impresora,
             success: function(data){
-                /*        
-                $.each(data, function(i,linea) {
-                    var url = "https://runners.viaappia.com.ve/imp1.php?p=" + localStorage.impresora + "&t=" + linea;
-                    
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("GET", url);
-                    xhr.onreadystatechange = function () {
-                    };
-                    xhr.send();
-                    delete xhr; 
-                });
-                */
                 alert('Pedido enviado');
-                /*
-                var newWin=window.open('','Print-Window');
-                newWin.document.open();
-                newWin.document.write(data);
-                newWin.document.close();
-                setTimeout(function(){newWin.close();},10);
-                */
-
             }
         })
     }
@@ -250,28 +245,16 @@ https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa"
             type: "GET",
             url: "ver_despacho_imp2?id=<?php echo $pedido['id']; ?>&p=" + localStorage.impresora,
             success: function(data){
-                /*      
-                $.each(data, function(i,linea) {
-                    var url = "https://runners.viaappia.com.ve/imp1.php?p=28&t=" + linea;
-                    
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("GET", url);
-                    xhr.onreadystatechange = function () {
-                    };
-                    xhr.send();
-                    delete xhr; 
-                });
-                */
-
                 alert('Pedido enviado');
-                /*
-                var newWin=window.open('','Print-Window');
-                newWin.document.open();
-                newWin.document.write(data);
-                newWin.document.close();
-                setTimeout(function(){newWin.close();},10);
-                */
-
+            }
+        })
+    }
+    function printArear(area_id){
+        $.ajax({
+            type: "GET",
+            url: "areas_imp?id=<?php echo $pedido['id']; ?>&p=" + localStorage.impresora + '&area_id=' + area_id,
+            success: function(data){
+                alert('Comanda enviada');
             }
         })
     }

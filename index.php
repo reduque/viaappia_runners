@@ -223,6 +223,11 @@ Route::add('/ver_despacho_imp2',function(){
     $id=rqq('id');
     include('pages/ver_despacho_imp2.php');
 },'get');
+Route::add('/areas_imp',function(){
+    $id=rqq('id');
+    $area_id=rqq('area_id');
+    include('pages/areas_imp.php');
+},'get');
 
 Route::add('/despachar',function(){
     $id=rqq('id');
