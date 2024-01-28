@@ -250,18 +250,53 @@ Route::add('/despachar',function(){
         //if($usuario->tipo_entrega == 'Delivery')
         enviar_push('/compra/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
     }
+    if($estatus == 8){
+        header('Location: /entregar?id=' . $id);
+        exit;
+    }
     header('Location: /');
 },'get','login');
 
 Route::add('/entregar',function(){
     $id=rqq('id');
-
     $estatus = 8;
     $data=[
         'estatus' => $estatus,
     ];
     $sql=crea_update('orders', $data, " where id = " . $id);
     $GLOBALS['mysqli']->query($sql);
+
+    $sql="Select id, saldo_wallet, user_id from orders where id=" . $id;
+    $pedido=lee1o($sql);
+
+    if($pedido->saldo_wallet > 0){
+        $sql="Select id, saldo from users where id=" . $pedido->user_id;
+        $usuario=lee1o($sql);
+        $saldo=$usuario->saldo + $pedido->saldo_wallet;
+
+        $data=[
+            'saldo' => $saldo
+        ];
+        $sql=crea_update('users', $data, " where id = " . $pedido->user_id);
+        $GLOBALS['mysqli']->query($sql);
+
+        $data=[
+            'user_id' => $pedido->user_id,
+            'order_id' => $pedido->id,
+            'tipo' => 'Débito',
+            'saldo' => $saldo,
+            'monto' => $pedido->saldo_wallet
+
+        ];
+        $sql=crea_insert('cashflows', $data);
+        $GLOBALS['mysqli']->query($sql);
+    
+        // Cashflow::create([
+        // ]);
+    }
+
+
+
 
     header('Location: /');
 },'get','login');

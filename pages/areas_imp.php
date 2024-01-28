@@ -35,28 +35,35 @@ $usuario=lee1($sql);
 if($pedido){
     $salida.=ancholinea('Área en la cocina: ' . $area['nombre']);
     $salida.=ancholinea('Pedido: ' . str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']);
-    $salida.=ancholinea('Fecha: ' . date('d/m/Y H:i:s',strtotime($pedido['created_at'])) );
+    // $salida.=ancholinea('Fecha: ' . date('d/m/Y H:i:s',strtotime($pedido['created_at'])) );
     $salida.=ancholinea('Tipo de entrega: ' . $pedido['tipo_entrega'] );
 
     $salida.=ancholinea('Retiro / entrega: ');
     $salida.=ancholinea(date('d/m/Y',strtotime($pedido['dia_entrega'])) . ' entre ' . date('h:i A', strtotime('-1 hour', strtotime('2023/02/02 ' . $pedido['hora_desde']))) .  ' y ' . date('h:i A', strtotime('-1 hour', strtotime('2023/02/02 ' . $pedido['hora_hasta']))));
     $salida.=ancholinea('Cliente: ' . $usuario['name']);
 
-    if($pedido['delivery_ref']<>''){
-        $salida.=ancholinea('Referencia de la empresa de delivery: ' .  $pedido['delivery_ref'] );
-    }
+    // if($pedido['delivery_ref']<>''){
+    //     $salida.=ancholinea('Referencia de la empresa de delivery: ' .  $pedido['delivery_ref'] );
+    // }
     $salida.=ancholinea(' ');
     $sql="Select * from order_products where order_id=" . $id;
     $items=leen($sql);
 
     foreach($items as $item){
-        $sql="select category_id from products where id=" . $item['product_id'];
+        $sql="select category_id, presentacion from products where id=" . $item['product_id'];
         $producto=lee1o($sql);
         if(in_array($producto->category_id, $categorias)){
             $cantidad=$item['cantidad'];
             $salida.=ancholinea($item['alias']);
             if( $item['variante'] <> ''){
                 $salida.=ancholinea($item['variante'] );
+            }
+            $salida.=ancholinea('Presentacion:' . $producto->presentacion);
+            if( $item['container_id'] <> ''){
+                $sql="select nombre from containers where id=" . $item['container_id'];
+                $contenedor=lee1o($sql);
+                $salida.=ancholinea('Peso: ' . $item['peso'] );
+                $salida.=ancholinea('Envase: ' . $contenedor->nombre );
             }
             $u='';
             $contornos='';
