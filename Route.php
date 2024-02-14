@@ -44,7 +44,18 @@ public static function run($basepath = '/'){
         $path_match_found = true;
           //valido middleware
           if($route['middleware'] == 'login'){
-              if (empty($_SESSION['api_token'])){
+              //ojo
+
+              // $q = $GLOBALS['mysqli']->query("select id,password, api_token, device_token from runners where id='17'");
+              // $usuario=mysqli_fetch_array($q, MYSQLI_ASSOC);
+              // $q->close();
+      
+              // $_SESSION['api_id'] = codifica($usuario['id']);
+              // $_SESSION['api_token'] = $usuario['api_token'];
+              // $_SESSION['device_token'] = $usuario['device_token'];
+  
+
+              if (empty($_COOKIE['api_token'])){
                   header('Location: login');
               }            
           }

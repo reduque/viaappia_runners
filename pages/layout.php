@@ -68,8 +68,8 @@
             appId: "1:639035428084:web:1d964e932f3173d7fa22a1",
             measurementId: "G-E78CLSNBNL"
         };
-        const api_token='<?php echo (!empty($_SESSION['api_token'])) ? $_SESSION['api_token'] : '';?>';
-        const device_token='<?php echo (!empty($_SESSION['device_token'])) ? $_SESSION['device_token'] : '';?>';
+        const api_token='<?php echo (!empty($_COOKIE['api_token'])) ? $_COOKIE['api_token'] : '';?>';
+        const device_token='<?php echo (!empty($_COOKIE['device_token'])) ? $_COOKIE['device_token'] : '';?>';
 
         const app = initializeApp(firebaseConfig);
         const messaging = getMessaging(app);

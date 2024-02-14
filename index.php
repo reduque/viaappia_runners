@@ -20,14 +20,18 @@ Route::add('/ingresar',function(){
         $usuario=mysqli_fetch_array($q, MYSQLI_ASSOC);
         $q->close();
         if (password_verify($password, $usuario['password'])) {
-            $_SESSION['api_id'] = codifica($usuario['id']);
-            $_SESSION['api_token'] = $usuario['api_token'];
-            $_SESSION['device_token'] = $usuario['device_token'];
+            // $_SESSION['api_id'] = codifica($usuario['id']);
+            // $_SESSION['api_token'] = $usuario['api_token'];
+            // $_SESSION['device_token'] = $usuario['device_token'];
             
+            setcookie('api_id',codifica($usuario['id']));
+            setcookie('api_token', $usuario['api_token']);
+            setcookie('device_token', $usuario['device_token']);
+
             $data=[
                 'logged' => 1
             ];
-            $sql=crea_update('runners', $data, " where api_token = '" . $_SESSION['api_token'] . "'");
+            $sql=crea_update('runners', $data, " where api_token = '" . $_COOKIE['api_token'] . "'");
             $GLOBALS['mysqli']->query($sql);
 
             header('Location: /');
@@ -43,9 +47,10 @@ Route::add('/asignar_device_token',function(){
     $data=[
         'device_token' => rqq('device_token')
     ];
-    $sql=crea_update('runners', $data, " where api_token = '" . $_SESSION['api_token'] . "'");
+    $sql=crea_update('runners', $data, " where api_token = '" . $_COOKIE['api_token'] . "'");
     $GLOBALS['mysqli']->query($sql);
-    $_SESSION['device_token'] = rqq('device_token');
+    // $_SESSION['device_token'] = rqq('device_token');
+    setcookie('device_token', rqq('device_token'));
     
     header('Location: /');
 },'get','login');
@@ -54,12 +59,12 @@ Route::add('/logout',function(){
     $data=[
         'logged' => 0
     ];
-    $sql=crea_update('runners', $data, " where api_token = '" . $_SESSION['api_token'] . "'");
+    $sql=crea_update('runners', $data, " where api_token = '" . $_COOKIE['api_token'] . "'");
     $GLOBALS['mysqli']->query($sql);
 
-    unset($_SESSION['api_id']);
-    unset($_SESSION['api_token']);
-    unset($_SESSION['device_token']);
+    unset($_COOKIE['api_id']);
+    unset($_COOKIE['api_token']);
+    unset($_COOKIE['device_token']);
     
     header('Location: login');
 },'get','login');
@@ -78,7 +83,7 @@ Route::add('/tomar_pedido',function(){
     $sql="Select id, user_id from orders where estatus=0 order by created_at limit 1";
     $r=lee1($sql);
     if($r){
-        $runner_id=decodifica($_SESSION['api_id']);
+        $runner_id=decodifica($_COOKIE['api_id']);
         $data=[
             'runner_id' => $runner_id,
             'fecha_runner' => date('Y-m-d H:i:s'),
@@ -100,7 +105,7 @@ Route::add('/tomar_yo',function(){
     $sql="Select id, user_id from orders where (estatus=1 or estatus=6 or estatus=7) and id=" . rqq('id');
     $r=lee1($sql);
     if($r){
-        $runner_id=decodifica($_SESSION['api_id']);
+        $runner_id=decodifica($_COOKIE['api_id']);
         $data=[
             'runner_id' => $runner_id,
             'fecha_runner' => date('Y-m-d H:i:s'),

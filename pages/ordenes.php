@@ -2,7 +2,7 @@
 <?php
 $sonaralarma=false;
 $haypedidot=false;
-$runner_id=decodifica($_SESSION['api_id']);
+$runner_id=decodifica($_COOKIE['api_id']);
 
 $sql="Select count(*) as n from orders where estatus=0";
 $r=lee1($sql);
@@ -209,7 +209,7 @@ if($r->num_rows>0){
     }
 }
 
-$sql="Select orders.id, orders.tienda, b.name as runner_name, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join runners b on orders.runner_id=b.id join users on orders.user_id=users.id where (estatus=1 or estatus=6 or estatus=7) and runner_id<>" . decodifica($_SESSION['api_id']);
+$sql="Select orders.id, orders.tienda, b.name as runner_name, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join runners b on orders.runner_id=b.id join users on orders.user_id=users.id where (estatus=1 or estatus=6 or estatus=7) and runner_id<>" . decodifica($_COOKIE['api_id']);
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
