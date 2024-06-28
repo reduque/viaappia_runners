@@ -1,7 +1,7 @@
 <h1>Pedido</h1>
 
 <?php
-$sql="Select id, created_at, tipo_entrega, hora_desde, hora_hasta, delivery_ref, dia_entrega, tienda from orders where id=" . $id;
+$sql="Select o.id, o.created_at, o.tipo_entrega, o.hora_desde, o.hora_hasta, o.delivery_ref, o.dia_entrega, o.tienda, o.company_id, companies.nombre as compania from orders o left join companies on o.company_id=companies.id where o.id=" . $id;
 $pedido=lee1($sql);
 
 if($pedido){
@@ -10,6 +10,7 @@ if($pedido){
         <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']; ?><br>
         <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?><br>
         <?php
+        if($pedido['compania']) echo '<p class="alerta_fechas rojo">' . $pedido['compania'] . '</p>';
         $class_alert = '';
         if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))){
             $class_alert = 'class="alerta_fechas rojo"';
@@ -135,11 +136,11 @@ if($pedido){
             e.preventDefault();
             if($(this).data('tienda') == 'TRAILER'){
                 if(confirm('¿Está seguro de enviar este pedido y camniar la tienda?')){
-                    document.location="procesar?id=<?php echo $id; ?>&tienda=" + $(this).data('tienda');
+                    document.location="procesar?id=<?php echo $id; ?>&tienda=" + $(this).data('tienda') + "&company_id=<?php echo ($pedido['company_id']) ?:0; ?>";
                 }
             }else{
                 if(confirm('¿Está seguro de enviar este pedido?')){
-                    document.location="procesar?id=<?php echo $id; ?>&tienda=" + $(this).data('tienda');
+                    document.location="procesar?id=<?php echo $id; ?>&tienda=" + $(this).data('tienda')+ "&company_id=<?php echo ($pedido['company_id']) ?:0; ?>";
                 }
             }
         })

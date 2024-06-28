@@ -176,24 +176,46 @@ Route::add('/procesar',function(){
             enviar_push('/revisar_pedido/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
         }
     }else{
-        $data=[
-            'estatus' => 3,
-            'tienda' => rqq('tienda'),
-            'fecha_confirmacion' => date('Y-m-d H:i:s'),
-        ];
-        $sql=crea_update('orders', $data, " where id = " . $id);
-        $GLOBALS['mysqli']->query($sql);
-        
-        $sql=crea_update('users', ['order_estatus' => 3, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
-        $GLOBALS['mysqli']->query($sql);
+        $company_id=rqq('company_id');
+        if($company_id){
+            $sql="select tot_d_ttc from orders where id=" . $id;
+            $orden=lee1o($sql);
+            $data=[
+                'forma_pago' => 'Corporativo',
+                'estatus' => 6,
+                'tienda' => rqq('tienda'),
+                'fecha_confirmacion' => date('Y-m-d H:i:s'),
+                'fecha_pago' => date('Y-m-d H:i:s'),
+                'ingreso_d' => $orden->tot_d_ttc,
+                'ingreso_bs' => 0,
+                'ingreso_bsd' => 0
+            ];
+            $sql=crea_update('orders', $data, " where id = " . $id);
+            $GLOBALS['mysqli']->query($sql);
 
-        if($usuario->device_token){
-            enviar_push('/checkout/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
+            $sql=crea_update('users', ['order_estatus' => 0,'order_id' => 0, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
+            $GLOBALS['mysqli']->query($sql);
+
+            if($usuario->device_token){
+                enviar_push('/compra_exitosa_corporativo',[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
+            }
+
+        }else{
+            $data=[
+                'estatus' => 3,
+                'tienda' => rqq('tienda'),
+                'fecha_confirmacion' => date('Y-m-d H:i:s'),
+            ];
+            $sql=crea_update('orders', $data, " where id = " . $id);
+            $GLOBALS['mysqli']->query($sql);
+            
+            $sql=crea_update('users', ['order_estatus' => 3, 'order_last_update' => date('Y/m/d  H:i:s')], " where id = '" . $usuario->user_id . "'");
+            $GLOBALS['mysqli']->query($sql);
+
+            if($usuario->device_token){
+                enviar_push('/checkout/' . $idc,[$usuario->device_token],"Pedidos","Revisar el pedido",'Tienes una nueva notificación de su compra, ¿Quieres ir a la compra?');
+            }
         }
-        /*
-        echo '/checkout/' . $idc;
-        exit;
-        */
     }
     
     header('Location: /');

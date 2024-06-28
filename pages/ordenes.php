@@ -17,7 +17,7 @@ if($r['n']>0){
     </article>
     <?php
 }
-$sql="Select orders.id, orders.tienda, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join users on orders.user_id=users.id where estatus=1 and runner_id=" . $runner_id;
+$sql="Select orders.id, orders.tienda, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega, companies.nombre as compania from (orders join users on orders.user_id=users.id) left join companies on orders.company_id=companies.id where estatus=1 and runner_id=" . $runner_id;
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
@@ -43,7 +43,14 @@ if($r->num_rows>0){
         ?>
         <article class="a">
             <div>
-                <div>Pedido en proceso (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']; ?>) <br><?php echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : ''); if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos']; ?></div>
+                <div>
+                    Pedido en proceso (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']; ?>) <br>
+                    <?php echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : '');
+                    if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br>
+                    <b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos'];
+                    if($pedido['compania']) echo '<br><b>' . $pedido['compania'] . '</b>';
+                    ?>
+                </div>
                 <a href="pedido?id=<?php echo $id; ?>">Validar existencia</a>
             </div>
         </article>
@@ -109,7 +116,7 @@ if($r->num_rows>0){
 
 }
 
-$sql="Select orders.id, orders.tienda, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega, delivery_ref from orders join users on orders.user_id=users.id where estatus=6 and runner_id=" . $runner_id;
+$sql="Select orders.id, orders.tienda, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega, delivery_ref, companies.nombre as compania from (orders join users on orders.user_id=users.id) left join companies on orders.company_id=companies.id where estatus=6 and runner_id=" . $runner_id;
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
@@ -138,9 +145,6 @@ if($r->num_rows>0){
                 <div>Listo para despacho (<?php echo str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']; ?>
                 <?php if($pedido['delivery_ref'] <> '') echo ' - ' . $pedido['delivery_ref']; ?>
                 )<br><?php 
-                    /*
-                    echo $pedido['tipo_entrega'] . ' ' . ((!$pedido['es_thanksgiving']) ? date('d/m/Y',strtotime($pedido['dia_entrega'])) : ''); if($pedido['tipo_entrega']=='Pick up') { echo '<br>' . (($pedido['es_thanksgiving']) ? '24/11/2022<br>' : '') .  $pedido['hora_desde'] . ' - ' . $pedido['hora_hasta'];} ?><br><b><?php echo $pedido['name']; ?></b><br><?php echo $pedido['telefonos'];
-                    */
                     $class_alert = '';
                     if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))){
                         $class_alert = 'class="alerta_fechas rojo"';
@@ -165,7 +169,8 @@ if($r->num_rows>0){
                     echo '</span>';
                     ?><br><b><?php echo $pedido['name']; 
                     ?></b><br><?php echo $pedido['telefonos'];
-                ?></div>
+                    if($pedido['compania']) echo '<br><b>' . $pedido['compania'] . '</b>';
+                    ?></div>
                 <a href="ver_despacho?id=<?php echo $id; ?>">Preparar pedido</a>
             </div>
         </article>
