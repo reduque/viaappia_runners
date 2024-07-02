@@ -10,7 +10,7 @@ if($pedido){
         <b>Pedido: </b><?php echo str_pad($id , 5, "0", STR_PAD_LEFT) . ' - ' . $pedido['tienda']; ?><br>
         <b>Fecha: </b><?php echo date('d/m/Y H:i:s',strtotime($pedido['created_at'])); ?><br>
         <?php
-        if($pedido['compania']) echo '<p class="alerta_fechas rojo">' . $pedido['compania'] . '</p>';
+        if($pedido['compania']) echo '<p class="alerta_fechas naranja">' . $pedido['compania'] . '</p>';
         $class_alert = '';
         if(strtotime(date('Y-m-d',strtotime($pedido['dia_entrega']))) > strtotime(date('Y-m-d'))){
             $class_alert = 'class="alerta_fechas rojo"';
