@@ -79,7 +79,7 @@ if($pedido){
                 $salida.=ancholinea('Contornos: ' . $contornos );
             }
             if( $item['horneado']){
-                $salida.=ancholinea('Horneado' );
+                $salida.=ancholinea('Cocinado' );
             }
             if( $item['empacado']){
                 $salida.=ancholinea('Empacado al vacio' );

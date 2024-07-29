@@ -76,7 +76,7 @@
                             echo '<li>' . 'Contornos: ' . $contornos . '</li>';
                         }
                         if( $item['horneado']){
-                            echo '<li>' . 'Horneado' . '</li>';
+                            echo '<li>' . 'Cocinado' . '</li>';
                         }
                         if( $item['empacado']){
                             echo '<li>' . 'Empacado al vacio' . '</li>';
