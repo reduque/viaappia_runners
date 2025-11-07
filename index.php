@@ -321,11 +321,54 @@ Route::add('/entregar',function(){
         // Cashflow::create([
         // ]);
     }
-
-
-
-
     header('Location: /');
+},'get','login');
+
+Route::add('/vencidos',function(){
+    $childView = 'pages/vencidos.php';
+    include('pages/layout.php');
+},'get','login');
+
+Route::add('/reactivar_compra',function(){
+    $id=rqq('id');
+    $sql="Select id, user_id from orders where id=" . $id;
+    $orden=lee1o($sql);
+    // var_dump($orden);
+    // exit;
+    $sql="Select * from users where id=" . $orden->user_id;
+    $usuario=lee1o($sql);
+    // var_dump($usuario);
+    // exit;
+    $sql="Select * from orders where user_id=" . $usuario->id . " order by id desc limit 1";
+    $ultima_orden=lee1o($sql);
+    // echo $usuario->order_estatus . ' - ' . $ultima_orden->id . ' - ' . $orden->id;
+    // exit;
+    if($usuario->order_estatus == 0 or $ultima_orden->id == $orden->id){
+        $sql=crea_update('users', [
+            'order_id' => $orden->id,
+            'order_estatus' => 3,
+            'order_last_update' => date('Y/m/d  H:i:s')
+        ], " where id = " . $usuario->id);
+        $GLOBALS['mysqli']->query($sql);
+
+        $sql=crea_update('orders', [
+            'estatus' => 3,
+            'fecha_confirmacion' => date('Y-m-d H:i:s'),
+        ], " where id = " . $id);
+        $GLOBALS['mysqli']->query($sql);
+
+        header('Location: /vencidos_resultado?accion=1');
+        exit;
+    }else{
+        header('Location: /vencidos_resultado?accion=2');
+    }
+
+},'get','login');
+
+Route::add('/vencidos_resultado',function(){
+    $accion=rqq('accion');
+    $childView = 'pages/vencidos_resultado.php';
+    include('pages/layout.php');
 },'get','login');
 
 Route::add('/imp1',function(){

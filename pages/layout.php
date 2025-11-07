@@ -40,6 +40,7 @@
         <?php if($childView <> 'pages/login.php'){ ?>
             <ul>
                 <li><a href="/">Lista de pedidos</a></li>
+                <li><a href="/vencidos">Vencidos</a></li>
                 <li><a href="logout">Salir</a></li>
             </ul>
         <?php } ?>
