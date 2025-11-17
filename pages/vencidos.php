@@ -4,7 +4,7 @@
 $sql="Select 
     orders.id, orders.tienda, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega, delivery_ref, companies.nombre as compania 
     from (orders join users on orders.user_id=users.id) left join companies on orders.company_id=companies.id 
-    where estatus>=21 and orders.created_at > date_sub(now(), interval 5 day)
+    where estatus>=21 and orders.created_at > date_sub(now(), interval 24 hour)
     order by orders.created_at desc";
 $r=leen($sql);
 if($r->num_rows>0){
