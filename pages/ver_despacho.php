@@ -168,7 +168,14 @@ Dirección de entrega: ' . $pedido['direccion'] . '
 Municipio: ' . $pedido['municipio'] . '
 ' . $m_efectivo . ' 
 
-https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa" target="_blank">Enviar WhatsApp al delivery</a></td>
+https://www.google.com/maps/@') . $pedido['ubicacion']; ?>,18z" class="boton_wa" target="_blank">Enviar WhatsApp al delivery</a>
+                <?php if($pedido['delivery_ref']==''){ ?>
+                    <br><a href="pedir_yummy?service_type=0&id=<?php echo($pedido['id']); ?>" id="yummy" class="boton_wa">Solicitar yummy - Mandaditos con Backpack</a>
+                    <br><a href="pedir_yummy?service_type=1&id=<?php echo($pedido['id']); ?>" id="yummy" class="boton_wa">Solicitar yummy - Mandaditos XL</a>
+                <?php }else{ ?>
+                    <br><br><b>Referencia de delivery: </b><?php echo $pedido['delivery_ref'];
+                } ?>
+                </td>
                 <?php } ?>
             </tr>
         </table>
