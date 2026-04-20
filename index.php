@@ -422,73 +422,75 @@ Route::add('/imp1',function(){
 
 
 Route::add('/pedir_yummy',function(){
-    $sql="Select id, ubicacion from orders where (estatus=1 or estatus=6 or estatus=7) and id=" . rqq('id');
+    $sql="Select id, ubicacion from orders where (estatus=6 or estatus=7) and id=" . rqq('id');
     $r=lee1($sql);
+    // print_r($sql);
+    // exit;
+    if($r){
+        $url = $_ENV["API_URL"] . 'quotation/api-corporate';
+        $api_key = $_ENV["API_KEY"];
 
-    $url = $_ENV["API_URL"] . 'quotation/api-corporate';
-    $api_key = $_ENV["API_KEY"];
-
-    $array_valores = explode(',', $r['ubicacion']);
-    $data = array(
-        "weight" => 1,
-        "pickupLatitude" => 10.49784988904946,
-        "pickupLongitude" => -66.8531887633908,
-        "destinationLatitude" => (float) $array_valores[0],
-        "destinationLongitude" => (float) $array_valores[1],
-    );
-    $json_data = json_encode($data);
-    $ch = curl_init($url);
-    $headers = array(
-        'Content-Type: application/json',
-        'Api-Key: ' . $api_key,
-        'language: es',
-    );
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    $response = curl_exec($ch);
-    if (curl_errno($ch)) {
-        $error_msg = curl_error($ch);
-        echo "Error cURL: " . $error_msg;
-        echo "<br><br>";
-        echo '<a href="/ver_despacho?id=' . $r['id'] . '">Regresar al pedido</a>';
-    } else {
-        $r_json = json_decode($response);
-        if($r_json->status == 200 or $r_json->status == '201'){
-            $trip_services = $r_json->response->trip_services;
-            $service_type_id = $trip_services[rqq('service_type')]->service_type_id;
-            $data=[
-                'quotationId' => $r_json->response->quotationId,
-                'trip_services' => $service_type_id,
-                'trip_services_index' => rqq('service_type'),
-            ];
-            $sql=crea_update('orders', $data, " where id = '" . $r['id'] . "'");
-            $GLOBALS['mysqli']->query($sql);    
-
-            header('Location: /pedir_yummy2?id=' . $r['id']);
-        }else{
-            echo "Error al crear la solicitud en Yummy: " . $r_json->response->message;
+        $array_valores = explode(',', $r['ubicacion']);
+        $data = array(
+            "weight" => 1,
+            "pickupLatitude" => 10.49784988904946,
+            "pickupLongitude" => -66.8531887633908,
+            "destinationLatitude" => (float) $array_valores[0],
+            "destinationLongitude" => (float) $array_valores[1],
+        );
+        $json_data = json_encode($data);
+        $ch = curl_init($url);
+        $headers = array(
+            'Content-Type: application/json',
+            'Api-Key: ' . $api_key,
+            'language: es',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+            echo "Error cURL: " . $error_msg;
             echo "<br><br>";
             echo '<a href="/ver_despacho?id=' . $r['id'] . '">Regresar al pedido</a>';
+        } else {
+            $r_json = json_decode($response);
+            if($r_json->status == 200 or $r_json->status == '201'){
+                $trip_services = $r_json->response->trip_services;
+                $service_type_id = $trip_services[rqq('service_type')]->service_type_id;
+                $data=[
+                    'quotationId' => $r_json->response->quotationId,
+                    'trip_services' => $service_type_id,
+                    'trip_services_index' => rqq('service_type'),
+                ];
+                $sql=crea_update('orders', $data, " where id = '" . $r['id'] . "'");
+                $GLOBALS['mysqli']->query($sql);    
+
+                header('Location: /pedir_yummy2?id=' . $r['id']);
+            }else{
+                echo "Error al crear la solicitud en Yummy: " . $r_json->response->message;
+                echo "<br><br>";
+                echo '<a href="/ver_despacho?id=' . $r['id'] . '">Regresar al pedido</a>';
+            }
+            exit;
         }
-        exit;
     }
 },'get');
 
 
 Route::add('/pedir_yummy2',function(){
-    $sql="Select id, quotationId, trip_services, monto_efectivo, user_id, direccion from orders where (estatus=1 or estatus=6 or estatus=7) and id=" . rqq('id');
+    $sql="Select id, nombre, telefono, quotationId, trip_services, monto_efectivo, user_id, direccion from orders where (estatus=1 or estatus=6 or estatus=7) and id=" . rqq('id');
     $r=lee1($sql);
-    $sql="Select name from users where id=" . $r['user_id'];
-    $usuario=lee1o($sql);
+    // $sql="Select name from users where id=" . $r['user_id'];
+    // $usuario=lee1o($sql);
     $runner_id=decodifica($_COOKIE['api_id']);
     $sql="Select name from runners where id=" . $runner_id;
     $runner=lee1o($sql);
     $url = $_ENV["API_URL"] . 'trip/api-corporate';
     $api_key = $_ENV["API_KEY"];
     $payerId = $_ENV["PAYER_ID"];
-
     $data = array(
         "payerId" => $payerId,
         "paymentMode" => $r['monto_efectivo'] > 0 ? 1 : 7,
@@ -499,11 +501,11 @@ Route::add('/pedir_yummy2',function(){
         "user_last_name" => $runner->name,
         "totalOrderPrice" => (float) $r['monto_efectivo'],
         "user_first_name" => $runner->name,
-        "user_phone_number" => "4242973067",
+        "user_phone_number" => "4128573252",
         "destinationAddress" => $r['direccion'],
-        "receiver_last_name" => $usuario->name,
-        "receiver_first_name" => $usuario->name,
-        "receiver_phone_number" => "4143223323",
+        "receiver_last_name" => $r['nombre'],
+        "receiver_first_name" => $r['nombre'],
+        "receiver_phone_number" => str_replace("+58", "", $r['telefono']),
         "user_country_phone_code" => "+58",
         "receiver_country_phone_code" => "+58"
     );
@@ -553,20 +555,121 @@ Route::add('/pedir_yummy2',function(){
 
 Route::add('/webhook',function(){
     $json_recibido = file_get_contents('php://input');
+    $data=[
+        'respuesta' => $json_recibido,
+        'created_at' => date('Y-m-d H:i:s')
+    ];
+    $sql=crea_insert('rechazos', $data);
+    $GLOBALS['mysqli']->query($sql);
     $data = json_decode($json_recibido, true);
     $orderId = $data['data']['orderId'];
+
+    $sql="Select id, ubicacion, trip_services_index from orders where (estatus=6 or estatus=7) and id=" . $orderId;
+    $r=lee1($sql);
+    if($r){
+        $url = $_ENV["API_URL"] . 'quotation/api-corporate';
+        $api_key = $_ENV["API_KEY"];
+
+        $array_valores = explode(',', $r['ubicacion']);
+        $data = array(
+            "weight" => 1,
+            "pickupLatitude" => 10.49784988904946,
+            "pickupLongitude" => -66.8531887633908,
+            "destinationLatitude" => (float) $array_valores[0],
+            "destinationLongitude" => (float) $array_valores[1],
+        );
+        $json_data = json_encode($data);
+        $ch = curl_init($url);
+        $headers = array(
+            'Content-Type: application/json',
+            'Api-Key: ' . $api_key,
+            'language: es',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        $response = curl_exec($ch);
+        if (!curl_errno($ch)) {
+            $r_json = json_decode($response);
+            if($r_json->status == 200 or $r_json->status == '201'){
+                $trip_services = $r_json->response->trip_services;
+                $service_type_id = $trip_services[$r['trip_services_index']]->service_type_id;
+                $data=[
+                    'quotationId' => $r_json->response->quotationId,
+                    'trip_services' => $service_type_id,
+                ];
+                $sql=crea_update('orders', $data, " where id = '" . $orderId . "'");
+                $GLOBALS['mysqli']->query($sql);    
+
+
+                $sql="Select id, nombre, telefono, quotationId, trip_services, monto_efectivo, user_id, direccion from orders where (estatus=1 or estatus=6 or estatus=7) and id=" . $orderId;
+                $r=lee1($sql);
+                $url = $_ENV["API_URL"] . 'trip/api-corporate';
+                $api_key = $_ENV["API_KEY"];
+                $payerId = $_ENV["PAYER_ID"];
+                $data = array(
+                    "payerId" => $payerId,
+                    "paymentMode" => $r['monto_efectivo'] > 0 ? 1 : 7,
+                    "quotationId" => $r['quotationId'],
+                    "serviceTypeId" => $r['trip_services'],
+                    "sourceAddress" => "La Castellana, Av Blandín, VIA APPIA, Caracas 1060, Miranda",
+                    "partnerOrderId" => str_pad($orderId , 5, "0", STR_PAD_LEFT),
+                    "user_last_name" => 'ViaAppia',
+                    "totalOrderPrice" => (float) $r['monto_efectivo'],
+                    "user_first_name" => 'ViaAppia',
+                    "user_phone_number" => "4128573252",
+                    "destinationAddress" => $r['direccion'],
+                    "receiver_last_name" => $r['nombre'],
+                    "receiver_first_name" => $r['nombre'],
+                    "receiver_phone_number" => str_replace("+58", "", $r['telefono']),
+                    "user_country_phone_code" => "+58",
+                    "receiver_country_phone_code" => "+58"
+                );
+                $json_data = json_encode($data);
+                $ch = curl_init($url);
+                $headers = array(
+                    'Content-Type: application/json',
+                    'Api-Key: ' . $api_key,
+                    'language: es',
+                );
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                $response = curl_exec($ch);
+                if (!curl_errno($ch)) {
+                    $r_json = json_decode($response);
+                    if($r_json->status == 200 or $r_json->status == '201'){
+                        $data=[
+                            'delivery_ref' => $r_json->response->trip_unique_id,
+                        ];
+                        $sql=crea_update('orders', $data, " where id = '" . $orderId . "'");
+                        $GLOBALS['mysqli']->query($sql);
+                    }
+                    exit;
+                }
+            }
+            exit;
+        }
+    }
+
+    
+
+    exit;
+
     $sql="Select id, trip_services_index from orders where id=" . $orderId;
     $r=lee1($sql);
+    // var_dump($orderId);exit;
+
     if($r){
         $data=[
             'delivery_ref' => null
         ];
         $sql=crea_update('orders', $data, " where id = '" . $r['id'] . "'");
+        $GLOBALS['mysqli']->query($sql);
+
         header('Location: /pedir_yummy?service_type=' . $r['trip_services_index'] . '&id=' . $r['id']);
-        // print_r($r);
-        // exit;
-    // }else{
-    //     echo "Orden no encontrada";
     }
 },'post');
 
