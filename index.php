@@ -430,7 +430,7 @@ Route::add('/pedir_yummy',function(){
         $url = $_ENV["API_URL"] . 'quotation/api-corporate';
         $api_key = $_ENV["API_KEY"];
 
-        $array_valores = explode(',', $r['ubicacion']);
+        $array_valores = explode(',', ($r['ubicacion'] ?: '10.49784988904946,-66.8531887633908'));
         $data = array(
             "weight" => 1,
             "pickupLatitude" => 10.49784988904946,
@@ -574,7 +574,7 @@ Route::add('/webhook',function(){
         $url = $_ENV["API_URL"] . 'quotation/api-corporate';
         $api_key = $_ENV["API_KEY"];
 
-        $array_valores = explode(',', $r['ubicacion']);
+        $array_valores = explode(',', ($r['ubicacion'] ?: '10.49784988904946,-66.8531887633908'));
         $data = array(
             "weight" => 1,
             "pickupLatitude" => 10.49784988904946,

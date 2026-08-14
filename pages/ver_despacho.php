@@ -136,7 +136,7 @@ if($pedido){
                 <td><a href="javascript:" class="botones" onclick="printDiv()">Imprimir pedido</a></td>
                 <td><a href="javascript:" class="botones" onclick="printDiv2()">Imprimir pedido cliente</a></td>
                 <td>
-                <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' or $pedido['forma_pago']=='PuntoVenta' or $pedido['forma_pago']=='Mixto2' ){ ?>
+                <?php if( $pedido['forma_pago']=='PagoMovil' or $pedido['forma_pago']=='Transferencia' or $pedido['forma_pago']=='PuntoVenta' or $pedido['forma_pago']=='Mixto2' or $pedido['forma_pago']=='DebitoInmediato' ){ ?>
                     <b>Forma de pago: </b><?php echo $pedido['forma_pago'];
                     if($pedido['ingreso_bs'] > 0 or 1){
                         echo '<br>Ingreso en Bs: ' . number_format($pedido['ingreso_bs'], 2, ',', '.');
