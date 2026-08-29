@@ -18,5 +18,27 @@ $(document).ready(function(){
     cargar();
 })
 const audio = new Audio('./sonido/alerta.wav');
+const audioNuevo = new Audio('./sonido/nuevo.wav');
 
+function reproducirAlarmas(nuevo, alerta) {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.onended = null;
+
+    audioNuevo.pause();
+    audioNuevo.currentTime = 0;
+    audioNuevo.onended = null;
+
+    if (nuevo && alerta) {
+        audioNuevo.onended = function() {
+            audio.play();
+            audioNuevo.onended = null;
+        };
+        audioNuevo.play();
+    } else if (nuevo) {
+        audioNuevo.play();
+    } else if (alerta) {
+        audio.play();
+    }
+}
 </script>

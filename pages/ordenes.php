@@ -1,6 +1,7 @@
 
 <?php
 $sonaralarma=false;
+$sonarnuevo=false;
 $haypedidot=false;
 $runner_id=decodifica($_COOKIE['api_id']);
 
@@ -8,6 +9,7 @@ $sql="Select count(*) as n from orders where estatus=0";
 $r=lee1($sql);
 if($r['n']>0){
     $haypedidot=true;
+    $sonarnuevo=true;
     ?>
     <article class="r">
         <div>
@@ -112,7 +114,6 @@ if($r->num_rows>0){
         </article>
     <?php
     }
-    if($sonaralarma) echo "<script>audio.play();</script>";
 
 }
 
@@ -277,3 +278,9 @@ if($r->num_rows>0){
 }
 
 if(!$haypedidot){ ?><p>No hay pedidos pendientes</p><?php }
+
+if ($sonarnuevo || $sonaralarma) {
+    $n_js = $sonarnuevo ? 'true' : 'false';
+    $a_js = $sonaralarma ? 'true' : 'false';
+    echo "<script>if (typeof reproducirAlarmas === 'function') reproducirAlarmas($n_js, $a_js);</script>";
+}
