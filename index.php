@@ -289,6 +289,7 @@ Route::add('/entregar',function(){
     $estatus = 8;
     $data=[
         'estatus' => $estatus,
+        'fecha_entrega' => date('Y-m-d H:i:s')
     ];
     $sql=crea_update('orders', $data, " where id = " . $id);
     $GLOBALS['mysqli']->query($sql);

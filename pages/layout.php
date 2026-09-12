@@ -88,15 +88,24 @@
         }).catch((err) => {
             console.log('An error occurred while retrieving token. ', err);
         });
-        /*
         onMessage(messaging, (payload) => {
-            alert('pp');
-            console.log('Message received. ', payload.data.url);
-            // ...
+            console.log('Message received. ', payload);
+            if (payload.notification && payload.notification.title === 'Se ha generado un nuevo pedido') {
+                const audioNuevo = new Audio('/sonido/nuevo.wav');
+                audioNuevo.play().catch(err => console.warn('Audio no pudo reproducirse (requiere interacción previa): ', err));
+            }
         });
-        */
+        
         navigator.serviceWorker.addEventListener('message', (event) => {
             const payload=event.data;
+            if (payload.action === 'background_message') {
+                const data = payload.payload;
+                if (data && data.notification && data.notification.title === 'Se ha generado un nuevo pedido') {
+                    const audioNuevo = new Audio('/sonido/nuevo.wav');
+                    audioNuevo.play().catch(err => console.warn('Audio no pudo reproducirse (requiere interacción previa): ', err));
+                }
+                return;
+            }
             if(payload.hasOwnProperty("url")){
                 document.location=payload.url;
             }else{

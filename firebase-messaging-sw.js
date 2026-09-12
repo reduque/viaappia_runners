@@ -35,4 +35,12 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(function (clientList) {
+        for (const client of clientList) {
+            client.postMessage({
+                action: 'background_message',
+                payload: payload
+            });
+        }
+    });
 });
