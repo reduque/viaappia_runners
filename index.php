@@ -108,7 +108,7 @@ Route::add('/tomar_yo',function(){
         $runner_id=decodifica($_COOKIE['api_id']);
         $data=[
             'runner_id' => $runner_id,
-            'fecha_runner' => date('Y-m-d H:i:s'),
+            // 'fecha_runner' => date('Y-m-d H:i:s'),
             //'estatus' => 1
         ];
         $sql=crea_update('orders', $data, " where id = '" . $r['id'] . "'");
@@ -158,14 +158,19 @@ Route::add('/procesar',function(){
             $GLOBALS['mysqli']->query($sql);
         }
     }
-    $sql="select device_token, a.user_id from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
+    $sql="select device_token, a.user_id, a.fecha_confirmacion from orders a inner join users b on a.user_id=b.id where a.id=" . $id;
     $usuario=lee1o($sql);
     if($cambia){
         $data=[
             'estatus' => 2,
             'tienda' => rqq('tienda'),
-            'fecha_confirmacion' => date('Y-m-d H:i:s'),
+            'fecha_timer' => date('Y-m-d H:i:s'),
         ];
+        if (empty($usuario->fecha_confirmacion) || $usuario->fecha_confirmacion === '0000-00-00 00:00:00') {
+            $data['fecha_confirmacion'] = date('Y-m-d H:i:s');
+        }else{
+            $data['fecha_confirmacion2'] = date('Y-m-d H:i:s');
+        }
         $sql=crea_update('orders', $data, " where id = " . $id);
         $GLOBALS['mysqli']->query($sql);
 
@@ -184,12 +189,17 @@ Route::add('/procesar',function(){
                 'forma_pago' => 'Corporativo',
                 'estatus' => 6,
                 'tienda' => rqq('tienda'),
-                'fecha_confirmacion' => date('Y-m-d H:i:s'),
                 'fecha_pago' => date('Y-m-d H:i:s'),
+                'fecha_timer' => date('Y-m-d H:i:s'),
                 'ingreso_d' => $orden->tot_d_ttc,
                 'ingreso_bs' => 0,
                 'ingreso_bsd' => 0
             ];
+            if (empty($usuario->fecha_confirmacion) || $usuario->fecha_confirmacion === '0000-00-00 00:00:00') {
+                $data['fecha_confirmacion'] = date('Y-m-d H:i:s');
+            }else{
+                $data['fecha_confirmacion2'] = date('Y-m-d H:i:s');
+            }
             $sql=crea_update('orders', $data, " where id = " . $id);
             $GLOBALS['mysqli']->query($sql);
 
@@ -204,8 +214,13 @@ Route::add('/procesar',function(){
             $data=[
                 'estatus' => 3,
                 'tienda' => rqq('tienda'),
-                'fecha_confirmacion' => date('Y-m-d H:i:s'),
+                'fecha_timer' => date('Y-m-d H:i:s'),
             ];
+            if (empty($usuario->fecha_confirmacion) || $usuario->fecha_confirmacion === '0000-00-00 00:00:00') {
+                $data['fecha_confirmacion'] = date('Y-m-d H:i:s');
+            }else{
+                $data['fecha_confirmacion2'] = date('Y-m-d H:i:s');
+            }
             $sql=crea_update('orders', $data, " where id = " . $id);
             $GLOBALS['mysqli']->query($sql);
             
@@ -332,7 +347,7 @@ Route::add('/vencidos',function(){
 
 Route::add('/reactivar_compra',function(){
     $id=rqq('id');
-    $sql="Select id, user_id from orders where id=" . $id;
+    $sql="Select id, user_id, fecha_confirmacion from orders where id=" . $id;
     $orden=lee1o($sql);
     // var_dump($orden);
     // exit;
@@ -352,10 +367,11 @@ Route::add('/reactivar_compra',function(){
         ], " where id = " . $usuario->id);
         $GLOBALS['mysqli']->query($sql);
 
-        $sql=crea_update('orders', [
+        $data = [
             'estatus' => 3,
-            'fecha_confirmacion' => date('Y-m-d H:i:s'),
-        ], " where id = " . $id);
+            'fecha_timer' => date('Y-m-d H:i:s'),
+        ];
+        $sql=crea_update('orders', $data, " where id = " . $id);
         $GLOBALS['mysqli']->query($sql);
 
         header('Location: /vencidos_resultado?accion=1');
