@@ -1,5 +1,5 @@
 //asignar un nombre y versión al cache
-const CACHE_NAME = 'v2_pizza',
+const CACHE_NAME = 'v3_pizza',
   urlsToCache = [
     'https://fonts.googleapis.com/css2?family=Antonio:wght@100;300;400;600;700&family=Playfair+Display:wght@400;500&display=swap',
     './android-chrome-192x192.png',

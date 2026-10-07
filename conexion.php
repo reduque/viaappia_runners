@@ -157,40 +157,34 @@ function estatus_array(){
 
 
 function enviar_push($url, $to, $titulo, $cuerpo, $mensaje){
-	$token = $_ENV["FIREBASE_API_KEY"];
-	//$to = $runners;
-	$msg = array
-		(
-			'body'  => $cuerpo,
-			'title' => $titulo,
-			'icon'  => ("./android-chrome-192x192.png"),
-			"sound" => "default"
-			//'click_action' => "https://viaappia_runners.test/enero"
-		);
-	$fields = array
-			(
-				'registration_ids' => $to,
-				'notification'  => $msg,
-				'data' => [
-					'url' => $url,
-					'mensaje' => $mensaje
-				]
-			);
-	$headers = array
-			(
-				'Authorization: key=' . $token,
-				'Content-Type: application/json',
-				'project_id: 639035428084'
-			);
+	// En PHP puro sin framework, leemos la ruta del JSON desde el .env
+	$credentialsPath = $_ENV["FIREBASE_CREDENTIALS"] ?? __DIR__ . '/firebase-auth.json';
+	
+	if (!file_exists($credentialsPath)) {
+		error_log("Error: Archivo de credenciales de Firebase no encontrado en " . $credentialsPath);
+		return;
+	}
 
-	$ch = curl_init();
-	curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-	curl_setopt( $ch,CURLOPT_POST, true );
-	curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-	curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-	curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-	$result = curl_exec($ch );
-	//echo($result);
-	curl_close( $ch );
+	$factory = (new \Kreait\Firebase\Factory)->withServiceAccount($credentialsPath);
+	$messaging = $factory->createMessaging();
+
+	$notification = \Kreait\Firebase\Messaging\Notification::create($titulo, $cuerpo);
+
+	$message = \Kreait\Firebase\Messaging\CloudMessage::new()
+		->withNotification($notification)
+		->withData([
+			'url' => $url,
+			'mensaje' => $mensaje
+		]);
+
+	// sendMulticast espera un array de tokens
+	if (!is_array($to)) {
+		$to = [$to];
+	}
+
+	try {
+		$messaging->sendMulticast($message, $to);
+	} catch (\Exception $e) {
+		error_log("Error enviando push FCM: " . $e->getMessage());
+	}
 }

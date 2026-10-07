@@ -1,2 +1,4 @@
 .env
 .atl/
+vendor/
+credentials/

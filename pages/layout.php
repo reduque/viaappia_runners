@@ -90,7 +90,7 @@
         });
         onMessage(messaging, (payload) => {
             console.log('Message received. ', payload);
-            if (payload.notification && payload.notification.title === 'Se ha generado un nuevo pedido') {
+            if (payload.notification && (payload.notification.title === 'Se ha generado un nuevo pedido' || payload.notification.body === 'Se ha generado un nuevo pedido')) {
                 const audioNuevo = new Audio('/sonido/nuevo.wav');
                 audioNuevo.play().catch(err => console.warn('Audio no pudo reproducirse (requiere interacción previa): ', err));
             }
@@ -100,7 +100,7 @@
             const payload=event.data;
             if (payload.action === 'background_message') {
                 const data = payload.payload;
-                if (data && data.notification && data.notification.title === 'Se ha generado un nuevo pedido') {
+                if (data && data.notification && (data.notification.title === 'Se ha generado un nuevo pedido' || data.notification.body === 'Se ha generado un nuevo pedido')) {
                     const audioNuevo = new Audio('/sonido/nuevo.wav');
                     audioNuevo.play().catch(err => console.warn('Audio no pudo reproducirse (requiere interacción previa): ', err));
                 }
