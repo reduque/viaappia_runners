@@ -60,7 +60,7 @@ if($r->num_rows>0){
     }
 }
 
-$sql="Select orders.id, orders.tienda, estatus, fecha_confirmacion, orders.forma_pago, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join users on orders.user_id=users.id where estatus in (2,3,4,5) and runner_id=" . $runner_id;
+$sql="Select orders.id, orders.tienda, estatus, fecha_confirmacion, fecha_timer, orders.forma_pago, users.name, users.telefonos, tipo_entrega, hora_desde, hora_hasta, es_thanksgiving, dia_entrega from orders join users on orders.user_id=users.id where estatus in (2,3,4,5) and runner_id=" . $runner_id;
 $r=leen($sql);
 if($r->num_rows>0){
     $haypedidot=true;
@@ -94,7 +94,7 @@ if($r->num_rows>0){
                 <?php
                 if($pedido['estatus'] == 3){
                     $to_time = time();
-                    $from_time = strtotime($pedido['fecha_confirmacion']);
+                    $from_time = strtotime($pedido['fecha_timer']);
                     $difencia = ($to_time - $from_time) / 60;
                     $clase='';
                     // echo $difencia;
